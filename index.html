@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MargemSul Import - Simulador de Importação EV</title>
+    <style>
+        :root {
+            --bg-body: #e8edf8;
+            --bg-gradient: radial-gradient(circle at top, rgba(37, 99, 235, 0.08), transparent 55%), radial-gradient(circle at 20% 20%, rgba(15, 157, 88, 0.08), transparent 45%);
+            --surface: #ffffff;
+            --surface-alt: #f6f8fc;
+            --text-primary: #0f172a;
+            --text-secondary: #5f6b8a;
+            --divider: rgba(15, 23, 42, 0.08);
+            --accent: #2563eb;
+            --accent-strong: #1d4ed8;
+            --accent-soft: rgba(37, 99, 235, 0.12);
+            --success: #0f9d58;
+            --success-soft: rgba(15, 157, 88, 0.16);
+            --warning: #f59e0b;
+            --warning-soft: rgba(245, 158, 11, 0.2);
+            --danger: #ef4444;
+            --danger-soft: rgba(239, 68, 68, 0.18);
+            --shadow-lg: 0 25px 60px rgba(15, 23, 42, 0.15);
+            --shadow-sm: 0 12px 30px rgba(15, 23, 42, 0.08);
+            --radius-card: 24px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-body: #020617;
+                --bg-gradient: radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.25), transparent 55%), radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.2), transparent 45%);
+                --surface: #0f172a;
+                --surface-alt: #111c36;
+                --text-primary: #f8fafc;
+                --text-secondary: #cbd5f5;
+                --divider: rgba(148, 163, 184, 0.25);
+                --accent-soft: rgba(96, 165, 250, 0.18);
+                --success-soft: rgba(34, 197, 94, 0.25);
+                --warning-soft: rgba(251, 191, 36, 0.2);
+                --danger-soft: rgba(248, 113, 113, 0.22);
+                --shadow-lg: 0 25px 60px rgba(2, 6, 23, 0.75);
+                --shadow-sm: 0 10px 30px rgba(15, 23, 42, 0.5);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-body);
+            background-image: var(--bg-gradient);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: clamp(1rem, 3vw, 2.5rem);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            position: relative;
+            overflow: hidden;
+            background: var(--surface);
+            padding: clamp(2rem, 4vw, 3rem);
+            border-radius: 32px;
+            border: 1px solid var(--divider);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% -10%, rgba(37, 99, 235, 0.2), transparent 55%);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        header>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            max-width: 580px;
+            margin: 0.75rem auto 1.25rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.45rem 0.95rem;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent-strong);
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(37, 99, 235, 0.25);
+        }
+
+        .main-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            padding: clamp(1.5rem, 2.5vw, 2rem);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--divider);
+            box-shadow: var(--shadow-sm);
+            animation: rise 0.6s ease forwards;
+        }
+
+        .card h2 {
+            font-size: 1.35rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-section {
+            background: var(--surface-alt);
+            border: 1px dashed var(--divider);
+            padding: 1.25rem;
+            border-radius: 18px;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-section h3 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.45rem;
+            color: var(--text-secondary);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="url"],
+        input[type="month"] {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border-radius: 14px;
+            border: 1px solid var(--divider);
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-strong);
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        .reference-item {
+            padding: 1rem;
+            border-radius: 16px;
+            background: var(--surface);
+            border: 1px solid var(--divider);
+            margin-bottom: 1rem;
+        }
+
+        .reference-item h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        button {
+            flex: 1;
+            min-width: 180px;
+            padding: 0.95rem 1.5rem;
+            border-radius: 999px;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(120deg, #2563eb, #1d4ed8);
+            color: white;
+            box-shadow: 0 12px 24px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn-secondary {
+            background: var(--surface-alt);
+            color: var(--text-primary);
+            border: 1px solid var(--divider);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+
+            header,
+            .card {
+                box-shadow: none;
+            }
+
+            button {
+                display: none;
+            }
+        }
+
+        .results-container {
+            display: none;
+        }
+
+        .results-container.active {
+            display: block;
+        }
+
+        .status-banner {
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid transparent;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-success {
+            background: linear-gradient(120deg, var(--success-soft), rgba(15, 157, 88, 0.05));
+            color: var(--success);
+            border-color: rgba(15, 157, 88, 0.4);
+        }
+
+        .status-warning {
+            background: linear-gradient(120deg, var(--warning-soft), rgba(245, 158, 11, 0.05));
+            color: var(--warning);
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+
+        .status-danger {
+            background: linear-gradient(120deg, var(--danger-soft), rgba(239, 68, 68, 0.05));
+            color: var(--danger);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .car-info {
+            background: var(--surface-alt);
+            border-radius: 18px;
+            padding: 1.25rem;
+            border: 1px solid var(--divider);
+            margin-bottom: 1.5rem;
+        }
+
+        .car-info h3 {
+            font-size: 1.15rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .car-info a {
+            color: var(--accent-strong);
+            word-break: break-all;
+            font-size: 0.95rem;
+        }
+
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .chip-success {
+            background: var(--success-soft);
+            color: var(--success);
+        }
+
+        .chip-warning {
+            background: var(--warning-soft);
+            color: var(--warning);
+        }
+
+        .chip-danger {
+            background: var(--danger-soft);
+            color: var(--danger);
+        }
+
+        .chip-icon::before {
+            content: '•';
+        }
+
+        .chip-success .chip-icon::before {
+            content: '✓';
+        }
+
+        .chip-warning .chip-icon::before {
+            content: '⚠';
+        }
+
+        .chip-danger .chip-icon::before {
+            content: '✗';
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-item {
+            border-radius: 18px;
+            border: 1px solid var(--divider);
+            padding: 1rem;
+            background: var(--surface-alt);
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.35rem;
+        }
+
+        .result-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .result-value.positive {
+            color: var(--success);
+        }
+
+        .result-value.negative {
+            color: var(--danger);
+        }
+
+        .info-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 0.35rem;
+        }
+
+        .references-summary h3 {
+            margin-bottom: 0.75rem;
+        }
+
+        .reference-card {
+            border-radius: 16px;
+            border: 1px solid var(--divider);
+            padding: 1rem;
+            background: var(--surface-alt);
+            margin-bottom: 0.75rem;
+        }
+
+        .reference-card h4 {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.35rem;
+        }
+
+        .reference-card p {
+            font-weight: 600;
+        }
+
+        .reference-card a {
+            color: var(--accent-strong);
+            font-size: 0.85rem;
+            word-break: break-all;
+        }
+
+        .row-2cols {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .row-2cols {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🚗 MargemSul Import</h1>
+            <p class="subtitle">Simulador de Importação de Carros Elétricos da Alemanha para Portugal</p>
+            <div class="hero-badges">
+                <span class="badge">IVA DE 19% abatido</span>
+                <span class="badge">Overhead fixo 600€</span>
+                <span class="badge">IRC 21% sobre lucro</span>
+                <span class="badge">Viagem padrão 2.300 km</span>
+            </div>
+        </header>
+
+        <div class="main-grid">
+            <!-- Formulário -->
+            <div class="card">
+                <h2>📋 Dados da Simulação</h2>
+
+                <form id="simulatorForm">
+                    <!-- Carro na Alemanha -->
+                    <div class="form-section">
+                        <h3>🇩🇪 Carro na Alemanha</h3>
+
+                        <div class="form-group">
+                            <label for="carName">Nome do Carro</label>
+                            <input type="text" id="carName" required placeholder="Ex: BMW i3 120 Ah">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adLink">Link do Anúncio</label>
+                            <input type="url" id="adLink" required placeholder="https://www.mobile.de/...">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="priceWithVAT">Preço do Anúncio (com IVA 19%)</label>
+                            <input type="number" id="priceWithVAT" required placeholder="25000" step="0.01" min="0">
+                            <p class="info-text">O preço líquido sem IVA será calculado automaticamente</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="currentKm">Quilómetros Atuais</label>
+                            <input type="number" id="currentKm" required placeholder="45000" step="1" min="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tripKm">Quilómetros da Viagem DE → PT</label>
+                            <input type="number" id="tripKm" required value="2300" step="1" min="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="firstRegistration">Mês/Ano da 1.ª Matrícula</label>
+                            <input type="month" id="firstRegistration" required>
+                        </div>
+                    </div>
+
+                    <!-- Referências Portugal -->
+                    <div class="form-section">
+                        <h3>🇵🇹 Referências Standvirtual — Portugal</h3>
+
+                        <!-- Referência 1 -->
+                        <div class="reference-item">
+                            <h4>Referência 1</h4>
+                            <div class="form-group">
+                                <label for="ref1Link">Link</label>
+                                <input type="url" id="ref1Link" required placeholder="https://www.standvirtual.com/...">
+                            </div>
+                            <div class="row-2cols">
+                                <div class="form-group">
+                                    <label for="ref1Price">Preço Pedido (€)</label>
+                                    <input type="number" id="ref1Price" required placeholder="30000" step="0.01"
+                                        min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ref1Km">Km</label>
+                                    <input type="number" id="ref1Km" required placeholder="50000" step="1" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Referência 2 -->
+                        <div class="reference-item">
+                            <h4>Referência 2 (opcional)</h4>
+                            <div class="form-group">
+                                <label for="ref2Link">Link</label>
+                                <input type="url" id="ref2Link" placeholder="https://www.standvirtual.com/...">
+                            </div>
+                            <div class="row-2cols">
+                                <div class="form-group">
+                                    <label for="ref2Price">Preço Pedido (€)</label>
+                                    <input type="number" id="ref2Price" placeholder="32000" step="0.01" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ref2Km">Km</label>
+                                    <input type="number" id="ref2Km" placeholder="48000" step="1" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Referência 3 -->
+                        <div class="reference-item">
+                            <h4>Referência 3 (opcional)</h4>
+                            <div class="form-group">
+                                <label for="ref3Link">Link</label>
+                                <input type="url" id="ref3Link" placeholder="https://www.standvirtual.com/...">
+                            </div>
+                            <div class="row-2cols">
+                                <div class="form-group">
+                                    <label for="ref3Price">Preço Pedido (€)</label>
+                                    <input type="number" id="ref3Price" placeholder="31000" step="0.01" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ref3Km">Km</label>
+                                    <input type="number" id="ref3Km" placeholder="47000" step="1" min="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn-primary">🧮 Simular</button>
+                        <button type="button" class="btn-secondary" onclick="window.print()">📄 Gerar PDF</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Resultados -->
+            <div class="card results-container" id="results">
+                <h2>📊 Resultados da Simulação</h2>
+
+                <!-- Status Banner -->
+                <div id="statusBanner" class="status-banner"></div>
+
+                <!-- Informação do Carro -->
+                <div class="car-info">
+                    <h3 id="resultCarName"></h3>
+                    <a id="resultCarLink" href="#" target="_blank"></a>
+                </div>
+
+                <!-- Chips de Aviso -->
+                <div class="chips-container" id="chipsContainer"></div>
+
+                <!-- Resultados Financeiros -->
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="result-label">Preço Líquido (sem IVA DE)</div>
+                        <div class="result-value" id="netPrice"></div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">IVA Alemão Poupado</div>
+                        <div class="result-value positive" id="vatSaved"></div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Total Investido</div>
+                        <div class="result-value" id="totalInvested"></div>
+                        <p class="info-text">Preço líquido + 600€ overhead</p>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Venda Conservadora (mín.)</div>
+                        <div class="result-value" id="conservativeSale"></div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Venda Realista (média)</div>
+                        <div class="result-value" id="realisticSale"></div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Lucro Bruto</div>
+                        <div class="result-value" id="grossProfit"></div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">IRC (21%)</div>
+                        <div class="result-value" id="irc"></div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Lucro Líquido</div>
+                        <div class="result-value" id="netProfit"></div>
+                    </div>
+
+                    <div class="result-item">
+                        <div class="result-label">Margem</div>
+                        <div class="result-value" id="margin"></div>
+                    </div>
+                </div>
+
+                <!-- Referências Usadas -->
+                <div class="references-summary">
+                    <h3>Referências de Mercado PT</h3>
+                    <div id="referencesUsed"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CONSTANTS = {
+            VAT_DE: 0.19,
+            OVERHEAD: 600,
+            IRC_RATE: 0.21,
+            MIN_KM_FOR_VAT_EXEMPTION: 6000,
+            MIN_MONTHS_FOR_REGISTRATION: 6
+        };
+
+        document.getElementById('simulatorForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            calculateSimulation();
+        });
+
+        function calculateSimulation() {
+            // Inputs do carro
+            const carName = document.getElementById('carName').value;
+            const adLink = document.getElementById('adLink').value;
+            const priceWithVAT = parseFloat(document.getElementById('priceWithVAT').value);
+            const currentKm = parseFloat(document.getElementById('currentKm').value);
+            const tripKm = parseFloat(document.getElementById('tripKm').value);
+            const firstRegistration = document.getElementById('firstRegistration').value;
+
+            // Calcular preço líquido (sem IVA alemão)
+            const netPrice = priceWithVAT / (1 + CONSTANTS.VAT_DE);
+            const vatSaved = priceWithVAT - netPrice;
+            const totalInvested = netPrice + CONSTANTS.OVERHEAD;
+
+            // Km totais após viagem
+            const totalKmAfterTrip = currentKm + tripKm;
+
+            // Verificar meses desde 1ª matrícula
+            const registrationDate = new Date(firstRegistration + '-01');
+            const monthsSinceRegistration = getMonthsDifference(registrationDate, new Date());
+
+            // Coletar referências PT
+            const references = [];
+            for (let i = 1; i <= 3; i++) {
+                const link = document.getElementById(`ref${i}Link`).value;
+                const price = document.getElementById(`ref${i}Price`).value;
+                const km = document.getElementById(`ref${i}Km`).value;
+
+                if (link && price && km) {
+                    references.push({
+                        link: link,
+                        price: parseFloat(price),
+                        km: parseFloat(km)
+                    });
+                }
+            }
+
+            // Calcular vendas
+            const prices = references.map(r => r.price);
+            const conservativeSale = Math.min(...prices);
+            const realisticSale = prices.reduce((a, b) => a + b, 0) / prices.length;
+
+            // Lucros
+            const grossProfit = realisticSale - totalInvested;
+            const irc = grossProfit > 0 ? grossProfit * CONSTANTS.IRC_RATE : 0;
+            const netProfit = grossProfit - irc;
+            const margin = (grossProfit / totalInvested) * 100;
+
+            // Mostrar resultados
+            displayResults({
+                carName,
+                adLink,
+                netPrice,
+                vatSaved,
+                totalInvested,
+                conservativeSale,
+                realisticSale,
+                grossProfit,
+                irc,
+                netProfit,
+                margin,
+                totalKmAfterTrip,
+                monthsSinceRegistration,
+                references
+            });
+        }
+
+        function displayResults(data) {
+            // Mostrar container de resultados
+            document.getElementById('results').classList.add('active');
+
+            // Informação do carro
+            document.getElementById('resultCarName').textContent = data.carName;
+            document.getElementById('resultCarLink').textContent = data.adLink;
+            document.getElementById('resultCarLink').href = data.adLink;
+
+            // Valores financeiros
+            document.getElementById('netPrice').textContent = formatCurrency(data.netPrice);
+            document.getElementById('vatSaved').textContent = formatCurrency(data.vatSaved);
+            document.getElementById('totalInvested').textContent = formatCurrency(data.totalInvested);
+            document.getElementById('conservativeSale').textContent = formatCurrency(data.conservativeSale);
+            document.getElementById('realisticSale').textContent = formatCurrency(data.realisticSale);
+
+            const grossProfitEl = document.getElementById('grossProfit');
+            grossProfitEl.textContent = formatCurrency(data.grossProfit);
+            grossProfitEl.className = 'result-value ' + (data.grossProfit >= 0 ? 'positive' : 'negative');
+
+            document.getElementById('irc').textContent = formatCurrency(data.irc);
+
+            const netProfitEl = document.getElementById('netProfit');
+            netProfitEl.textContent = formatCurrency(data.netProfit);
+            netProfitEl.className = 'result-value ' + (data.netProfit >= 0 ? 'positive' : 'negative');
+
+            const marginEl = document.getElementById('margin');
+            marginEl.textContent = data.margin.toFixed(2) + '%';
+            marginEl.className = 'result-value ' + (data.margin >= 0 ? 'positive' : 'negative');
+
+            // Chips de aviso
+            displayChips(data);
+
+            // Status banner
+            displayStatusBanner(data);
+
+            // Referências
+            displayReferences(data.references);
+
+            // Scroll para resultados em mobile
+            if (window.innerWidth < 1024) {
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function displayChips(data) {
+            const container = document.getElementById('chipsContainer');
+            container.innerHTML = '';
+
+            // Chip IVA poupado
+            const vatChip = createChip(
+                `IVA Alemão Poupado: ${formatCurrency(data.vatSaved)}`,
+                'success'
+            );
+            container.appendChild(vatChip);
+
+            // Chip quilómetros
+            if (data.totalKmAfterTrip >= CONSTANTS.MIN_KM_FOR_VAT_EXEMPTION) {
+                const kmChip = createChip(
+                    `✓ ${data.totalKmAfterTrip.toLocaleString('pt-PT')} km após viagem (IVA PT = 0€)`,
+                    'success'
+                );
+                container.appendChild(kmChip);
+            } else {
+                const kmChip = createChip(
+                    `⚠ ${data.totalKmAfterTrip.toLocaleString('pt-PT')} km (risco IVA PT - mín. 6.000 km)`,
+                    'danger'
+                );
+                container.appendChild(kmChip);
+            }
+
+            // Chip matrícula
+            if (data.monthsSinceRegistration >= CONSTANTS.MIN_MONTHS_FOR_REGISTRATION) {
+                const regChip = createChip(
+                    `✓ ${data.monthsSinceRegistration} meses desde 1.ª matrícula`,
+                    'success'
+                );
+                container.appendChild(regChip);
+            } else {
+                const regChip = createChip(
+                    `⚠ ${data.monthsSinceRegistration} meses (mín. 6 meses recomendado)`,
+                    'warning'
+                );
+                container.appendChild(regChip);
+            }
+        }
+
+        function displayStatusBanner(data) {
+            const banner = document.getElementById('statusBanner');
+
+            if (data.grossProfit >= 4000 && data.margin >= 25) {
+                banner.className = 'status-banner status-success';
+                banner.textContent = `✓ EXCELENTE NEGÓCIO! Lucro: ${formatCurrency(data.netProfit)} | Margem: ${data.margin.toFixed(2)}%`;
+            } else if (data.grossProfit > 0) {
+                banner.className = 'status-banner status-warning';
+                banner.textContent = `⚠ Negócio Viável - Lucro: ${formatCurrency(data.netProfit)} | Margem: ${data.margin.toFixed(2)}%`;
+            } else {
+                banner.className = 'status-banner status-danger';
+                banner.textContent = `✗ NÃO RENTÁVEL - Prejuízo: ${formatCurrency(data.netProfit)}`;
+            }
+        }
+
+        function displayReferences(references) {
+            const container = document.getElementById('referencesUsed');
+            container.innerHTML = '';
+
+            references.forEach((ref, index) => {
+                const card = document.createElement('div');
+                card.className = 'reference-card';
+                card.innerHTML = `
+                    <h4>Referência ${index + 1}</h4>
+                    <p>${formatCurrency(ref.price)} • ${ref.km.toLocaleString('pt-PT')} km</p>
+                    <a href="${ref.link}" target="_blank">${ref.link}</a>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function createChip(text, type) {
+            const chip = document.createElement('div');
+            chip.className = `chip chip-${type}`;
+            chip.innerHTML = `<span class="chip-icon"></span>${text}`;
+            return chip;
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-PT', {
+                style: 'currency',
+                currency: 'EUR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value);
+        }
+
+        function getMonthsDifference(date1, date2) {
+            const months = (date2.getFullYear() - date1.getFullYear()) * 12 +
+                (date2.getMonth() - date1.getMonth());
+            return Math.max(0, months);
+        }
+
+        // Auto-scroll em mobile após submit
+        window.addEventListener('resize', function () {
+            if (window.innerWidth >= 1024) {
+                window.scrollTo(0, 0);
+            }
+        });
+    </script>
+</body>
+
+</html>
