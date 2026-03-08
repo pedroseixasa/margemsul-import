@@ -45,17 +45,17 @@ Margem = (Lucro bruto ÷ Total investido) × 100
 
 ### Sistema de Avaliação
 
-| Status | Critério |
-|--------|----------|
-| 🟢 **Excelente** | Lucro ≥ 4.000€ **e** margem ≥ 25% |
-| 🟠 **Viável** | Lucro positivo mas abaixo do threshold |
-| 🔴 **Não rentável** | Lucro negativo |
+| Status              | Critério                               |
+| ------------------- | -------------------------------------- |
+| 🟢 **Excelente**    | Lucro ≥ 4.000€ **e** margem ≥ 25%      |
+| 🟠 **Viável**       | Lucro positivo mas abaixo do threshold |
+| 🔴 **Não rentável** | Lucro negativo                         |
 
 ## 💻 Tecnologias
 
 - HTML5
 - CSS3 (Custom Properties, Grid, Flexbox)
-- JavaScript Vanilla (ES6+)  
+- JavaScript Vanilla (ES6+)
 - Material Design inspired
 - Responsive & Mobile-First
 
