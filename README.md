@@ -1,46 +1,24 @@
-# MargemSul Import - Simulador de Importação EV
+# 🚗 MargemSul Import
 
-Aplicação web responsiva para simular importação de carros elétricos da Alemanha para Portugal.
+Simulador web profissional para análise de rentabilidade na importação de carros elétricos usados da Alemanha para Portugal.
 
-## 📱 Características
+## 🎯 Sobre o Projeto
 
-- ✅ 100% responsivo (mobile-first)
-- ✅ Light/Dark mode automático
-- ✅ Cálculo automático de IVA alemão poupado
-- ✅ Análise de rentabilidade com IRC
-- ✅ Avisos coloridos sobre elegibilidade
-- ✅ Exportação para PDF
-- ✅ Single HTML file (sem dependências)
+Aplicação single-page desenvolvida para facilitar a tomada de decisão em importações de veículos elétricos, calculando automaticamente todos os custos, impostos e margem de lucro esperada.
 
-## 🚀 Como Hospedar
+## ✨ Funcionalidades
 
-### Opção 1: GitHub Pages (Grátis)
+- **Cálculo automático de IVA alemão** — Deduz automaticamente o IVA de 19% em compras empresariais
+- **Análise de rentabilidade completa** — IRC, overhead, lucro bruto e líquido
+- **Comparação de mercado PT** — Suporta até 3 referências do Standvirtual
+- **Avisos inteligentes** — Alertas sobre elegibilidade para isenção de IVA PT
+- **Status visual** — Sistema de cores indicando viabilidade do negócio
+- **Responsive design** — Totalmente adaptável a mobile, tablet e desktop
+- **Light/Dark mode** — Adaptação automática ao tema do sistema
+- **Exportação PDF** — Gera relatório impresso para apresentação
+- **Zero dependências** — Single HTML file, funciona offline
 
-1. Criar repositório no GitHub
-2. Fazer upload do ficheiro `index.html`
-3. Ir a Settings → Pages
-4. Escolher branch main
-5. Site disponível em: `https://seu-usuario.github.io/repo-name`
-
-### Opção 2: Netlify (Grátis)
-
-1. Aceder a [netlify.com](https://www.netlify.com/)
-2. Arrastar a pasta MargemSulImport para o Netlify Drop
-3. Site publicado instantaneamente com URL personalizada
-
-### Opção 3: Vercel (Grátis)
-
-1. Aceder a [vercel.com](https://vercel.com/)
-2. Importar projeto ou arrastar pasta
-3. Deploy automático com domínio vercel.app
-
-### Opção 4: Cloudflare Pages (Grátis)
-
-1. Aceder a [pages.cloudflare.com](https://pages.cloudflare.com/)
-2. Fazer upload do ficheiro
-3. Deploy instantâneo
-
-## 📋 Regras de Negócio Implementadas
+## 📋 Regras de Negócio
 
 ### Constantes Fixas
 
@@ -53,40 +31,53 @@ Aplicação web responsiva para simular importação de carros elétricos da Ale
 
 ### Cálculos Automáticos
 
-- Preço líquido = Preço com IVA ÷ 1.19
-- IVA poupado = Preço com IVA - Preço líquido
-- Total investido = Preço líquido + 600€
-- Venda conservadora = Mínimo das referências PT
-- Venda realista = Média das referências PT
-- Lucro bruto = Venda realista - Total investido
-- IRC = 21% × Lucro bruto (se positivo)
-- Lucro líquido = Lucro bruto - IRC
-- Margem = Lucro bruto ÷ Total investido × 100
+```
+Preço líquido = Preço com IVA ÷ 1.19
+IVA poupado = Preço com IVA − Preço líquido
+Total investido = Preço líquido + 600€
+Venda conservadora = mínimo(referências PT)
+Venda realista = média(referências PT)
+Lucro bruto = Venda realista − Total investido
+IRC = 21% × Lucro bruto (se > 0)
+Lucro líquido = Lucro bruto − IRC
+Margem = (Lucro bruto ÷ Total investido) × 100
+```
 
-### Status Global
+### Sistema de Avaliação
 
-- 🟢 Verde: Lucro ≥ 4.000€ E margem ≥ 25%
-- 🟠 Laranja: Lucro positivo mas abaixo do threshold
-- 🔴 Vermelho: Lucro negativo
+| Status | Critério |
+|--------|----------|
+| 🟢 **Excelente** | Lucro ≥ 4.000€ **e** margem ≥ 25% |
+| 🟠 **Viável** | Lucro positivo mas abaixo do threshold |
+| 🔴 **Não rentável** | Lucro negativo |
 
-## 💡 Como Usar
+## 💻 Tecnologias
 
-1. Preencher dados do carro na Alemanha
-2. Adicionar 1-3 referências do Standvirtual
-3. Clicar em "Simular"
-4. Analisar resultados e avisos
-5. Gerar PDF se necessário
+- HTML5
+- CSS3 (Custom Properties, Grid, Flexbox)
+- JavaScript Vanilla (ES6+)  
+- Material Design inspired
+- Responsive & Mobile-First
+
+## 📊 Como Usar
+
+1. Preencher dados do carro na Alemanha (preço, km, matrícula)
+2. Adicionar 1-3 referências comparáveis do Standvirtual PT
+3. Clicar em **Simular** para análise instantânea
+4. Analisar rentabilidade, avisos e status
+5. Exportar PDF para apresentação ao cliente
 
 ## 🎨 Design
 
-- Fonte: Inter / System UI
-- Cores neutras e profissionais
-- Estilo inspirado em Google Material com cartões minimalistas e badges informativos
-- Gradientes suaves e sombras flutuantes para sensação premium
-- Adaptação automática ao tema do sistema
-- Layout 2 colunas (desktop) / 1 coluna (mobile)
-- Otimizado para impressão
+Estilo minimalista inspirado em Google Material com foco em clareza e usabilidade:
 
-## 📄 Licença
+- Tipografia: **Inter** / System UI
+- Paleta: Tons neutros com acentos de cor estratégicos
+- Componentes: Cards flutuantes, badges informativos, gradientes suaves
+- Temas: Light/Dark mode automático via `prefers-color-scheme`
+- Layout: Responsivo 2-col desktop → 1-col mobile
+- Print: Otimizado para exportação PDF
 
-Desenvolvido para MargemSul Import © 2026
+---
+
+**MargemSul Import** © 2026 — Ferramenta profissional para análise de importação de veículos elétricos
