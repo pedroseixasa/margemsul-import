@@ -447,10 +447,10 @@
                 background: #f0f0f0 !important;
                 color: #000 !important;
                 border-radius: 4px;
-                font-size: 11pt;
+                font-size: 10pt;
                 font-weight: 900;
-                padding: 0.4cm;
-                margin-bottom: 0.4cm;
+                padding: 0.3cm;
+                margin-bottom: 0.3cm;
                 text-align: center;
             }
 
@@ -458,20 +458,20 @@
                 border: 1.5px solid #333;
                 background: white;
                 border-radius: 3px;
-                padding: 0.3cm;
-                margin-bottom: 0.4cm;
+                padding: 0.25cm;
+                margin-bottom: 0.3cm;
             }
 
             .car-info h3 {
-                font-size: 10pt;
+                font-size: 9.5pt;
                 font-weight: 900;
-                margin-bottom: 0.15cm;
+                margin-bottom: 0.1cm;
                 color: #000;
             }
 
             .car-info a {
                 color: #0066cc;
-                font-size: 7pt;
+                font-size: 6.5pt;
                 word-break: break-all;
                 text-decoration: none;
             }
@@ -480,7 +480,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 gap: 0.2cm;
-                margin-bottom: 0.4cm;
+                margin-bottom: 0.3cm;
             }
 
             .chip {
@@ -500,7 +500,7 @@
                 grid-template-columns: repeat(3, 1fr);
                 gap: 0;
                 border: 2px solid #000;
-                margin-bottom: 0.4cm;
+                margin-bottom: 0.3cm;
             }
 
             .result-item {
@@ -509,7 +509,7 @@
                 border-right: 1px solid #ccc;
                 border-bottom: 1px solid #ccc;
                 border-radius: 0;
-                padding: 0.25cm;
+                padding: 0.2cm;
                 box-shadow: none;
             }
 
@@ -555,14 +555,16 @@
             /* Referências compactas */
             .references-summary {
                 border-top: 2px solid #000;
-                padding-top: 0.3cm;
-                margin-top: 0.3cm;
+                padding-top: 0.25cm;
+                margin-top: 0.25cm;
+                margin-bottom: 0.25cm;
+                page-break-inside: avoid;
             }
 
             .references-summary h3 {
                 font-size: 9pt;
                 font-weight: 900;
-                margin-bottom: 0.25cm;
+                margin-bottom: 0.2cm;
                 color: #000;
             }
 
@@ -570,28 +572,29 @@
                 background: #f9f9f9 !important;
                 border: 1px solid #ccc !important;
                 border-radius: 2px;
-                padding: 0.25cm;
-                margin-bottom: 0.15cm;
+                padding: 0.2cm;
+                margin-bottom: 0.1cm;
                 box-shadow: none;
+                page-break-inside: avoid;
             }
 
             .reference-card h4 {
-                font-size: 7pt;
+                font-size: 6.5pt;
                 color: #555;
-                margin-bottom: 0.1cm;
+                margin-bottom: 0.05cm;
                 font-weight: 700;
                 text-transform: uppercase;
             }
 
             .reference-card p {
-                font-size: 8.5pt;
+                font-size: 8pt;
                 color: #000;
                 font-weight: 700;
                 margin-bottom: 0.05cm;
             }
 
             .reference-card a {
-                font-size: 6.5pt;
+                font-size: 6pt;
                 color: #0066cc;
                 text-decoration: none;
                 word-break: break-all;
@@ -599,23 +602,23 @@
 
             /* Glossário compacto em 2 colunas */
             .glossary {
-                margin-top: 0.4cm;
-                padding-top: 0.3cm;
+                margin-top: 0.25cm;
+                padding-top: 0.25cm;
                 border-top: 2px solid #000;
                 display: block !important;
-                page-break-before: avoid;
+                page-break-inside: auto;
             }
 
             .glossary h3 {
-                font-size: 9pt;
+                font-size: 8.5pt;
                 font-weight: 900;
-                margin-bottom: 0.25cm;
+                margin-bottom: 0.2cm;
                 color: #000;
             }
 
             .glossary-item {
-                margin-bottom: 0.15cm;
-                font-size: 6.5pt;
+                margin-bottom: 0.1cm;
+                font-size: 6pt;
                 line-height: 1.3;
                 page-break-inside: avoid;
             }
@@ -758,21 +761,22 @@
         @media print {
             .annual-projection {
                 display: block !important;
-                page-break-before: always;
-                margin-top: 0;
-                padding: 0.4cm;
+                page-break-before: auto;
+                page-break-inside: avoid;
+                margin-top: 0.25cm;
+                padding: 0.3cm;
                 border: 2px solid #000;
                 background: white;
                 border-radius: 4px;
             }
 
             .annual-projection h3 {
-                font-size: 11pt;
+                font-size: 10pt;
                 font-weight: 900;
                 color: #000;
                 border-bottom: 2px solid #000;
-                padding-bottom: 0.2cm;
-                margin-bottom: 0.3cm;
+                padding-bottom: 0.15cm;
+                margin-bottom: 0.25cm;
             }
 
             .projection-inputs {
@@ -796,8 +800,8 @@
             .projection-table thead th {
                 color: #000 !important;
                 border: 1.5px solid #000;
-                padding: 0.2cm;
-                font-size: 8pt;
+                padding: 0.15cm;
+                font-size: 7.5pt;
                 font-weight: 900;
                 text-align: center;
             }
@@ -809,8 +813,8 @@
             .projection-table tbody td {
                 color: #000 !important;
                 border: 1px solid #999;
-                padding: 0.18cm 0.25cm;
-                font-size: 8pt;
+                padding: 0.15cm 0.2cm;
+                font-size: 7.5pt;
                 line-height: 1.3;
             }
 
@@ -826,10 +830,10 @@
 
             .metric-description {
                 display: block;
-                font-size: 6pt;
+                font-size: 5.5pt;
                 font-weight: 400;
                 color: #666;
-                margin-top: 0.05cm;
+                margin-top: 0.03cm;
                 line-height: 1.2;
             }
 
@@ -839,11 +843,11 @@
 
             .projection-highlight td {
                 font-weight: 900 !important;
-                font-size: 8.5pt !important;
+                font-size: 8pt !important;
             }
 
             .irc-rate-label {
-                font-size: 6.5pt;
+                font-size: 6pt;
                 color: #333;
                 font-weight: 700;
             }
