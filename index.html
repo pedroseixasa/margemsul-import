@@ -129,9 +129,14 @@
 
         @media (min-width: 1024px) {
             .main-grid {
-                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-columns: 1fr 1fr;
                 gap: 1.75rem;
                 align-items: start;
+            }
+
+            /* Terceira coluna (resultados) ocupa largura total */
+            .main-grid>.card:nth-child(3) {
+                grid-column: 1 / -1;
             }
         }
 
@@ -676,6 +681,15 @@
             color: var(--text-primary);
         }
 
+        .metric-description {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            line-height: 1.3;
+        }
+
         .projection-table tbody td:not(:first-child) {
             text-align: right;
             font-weight: 500;
@@ -1066,7 +1080,7 @@
                 <span class="badge">IVA DE 19% abatido</span>
                 <span class="badge">Overhead fixo 600€</span>
                 <span class="badge">Transporte 750€</span>
-                <span class="badge">IRC 21% sobre lucro</span>
+                <span class="badge">IRC anual 17% PME/21%</span>
                 <span class="badge">Transporte: 5-15 dias</span>
             </div>
         </header>
@@ -1292,19 +1306,22 @@
                     <!-- Projeção Anual -->
                     <div class="annual-projection" id="annualProjection" style="display: none;">
                         <h3>📈 Projeção Anual de Negócio</h3>
-                        
+
                         <div class="projection-inputs">
                             <div class="projection-input-group">
                                 <label for="opsPerMonth">Nº de operações/mês</label>
-                                <input type="number" id="opsPerMonth" value="2" min="1" max="50" onchange="updateProjection()">
+                                <input type="number" id="opsPerMonth" value="2" min="1" max="50"
+                                    onchange="updateProjection()">
                             </div>
                             <div class="projection-input-group">
                                 <label for="activeMonths">Meses de atividade</label>
-                                <input type="number" id="activeMonths" value="12" min="1" max="12" onchange="updateProjection()">
+                                <input type="number" id="activeMonths" value="12" min="1" max="12"
+                                    onchange="updateProjection()">
                             </div>
                             <div class="projection-input-group">
                                 <label for="companyFee">Fee empresa / Acordo (%)</label>
-                                <input type="number" id="companyFee" value="0" min="0" max="100" step="0.5" onchange="updateProjection()">
+                                <input type="number" id="companyFee" value="0" min="0" max="100" step="0.5"
+                                    onchange="updateProjection()">
                             </div>
                         </div>
 
@@ -1319,47 +1336,58 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Nº de operações</td>
+                                        <td>Nº de operações<span class="metric-description">Quantidade de carros
+                                                importados no período</span></td>
                                         <td id="proj_ops_monthly">—</td>
                                         <td id="proj_ops_yearly">—</td>
                                     </tr>
                                     <tr>
-                                        <td>Receita total de vendas</td>
+                                        <td>Receita total de vendas<span class="metric-description">Valor total das
+                                                vendas no mercado PT</span></td>
                                         <td id="proj_revenue_monthly">—</td>
                                         <td id="proj_revenue_yearly">—</td>
                                     </tr>
                                     <tr>
-                                        <td>Total investido</td>
+                                        <td>Total investido<span class="metric-description">Custo líquido + overhead +
+                                                transporte</span></td>
                                         <td id="proj_invested_monthly">—</td>
                                         <td id="proj_invested_yearly">—</td>
                                     </tr>
                                     <tr>
-                                        <td>Lucro bruto total</td>
+                                        <td>Lucro bruto total<span class="metric-description">Receita menos investimento
+                                                (antes de deduções)</span></td>
                                         <td id="proj_gross_monthly">—</td>
                                         <td id="proj_gross_yearly">—</td>
                                     </tr>
                                     <tr>
-                                        <td>Fee empresa (<span id="proj_fee_pct">0</span>%)</td>
+                                        <td>Fee empresa / Acordo (<span id="proj_fee_pct">0</span>%)<span
+                                                class="metric-description">Percentagem aplicada sobre o lucro
+                                                bruto</span></td>
                                         <td id="proj_fee_monthly">—</td>
                                         <td id="proj_fee_yearly">—</td>
                                     </tr>
                                     <tr>
-                                        <td>Lucro antes de IRC</td>
+                                        <td>Lucro antes de IRC<span class="metric-description">Lucro bruto menos fee
+                                                empresa</span></td>
                                         <td id="proj_before_irc_monthly">—</td>
                                         <td id="proj_before_irc_yearly">—</td>
                                     </tr>
                                     <tr class="projection-highlight">
-                                        <td><strong>IRC estimado</strong> <span id="proj_irc_rate" class="irc-rate-label"></span></td>
+                                        <td><strong>IRC estimado</strong> <span id="proj_irc_rate"
+                                                class="irc-rate-label"></span><span class="metric-description">Imposto
+                                                sobre Pessoas Coletivas, calculado APENAS anualmente</span></td>
                                         <td>—</td>
                                         <td id="proj_irc_yearly"><strong>—</strong></td>
                                     </tr>
                                     <tr class="projection-highlight">
-                                        <td><strong>Lucro líquido final</strong></td>
+                                        <td><strong>Lucro líquido final</strong><span class="metric-description">O que
+                                                realmente fica após todas as deduções</span></td>
                                         <td id="proj_net_monthly"><strong>—</strong></td>
                                         <td id="proj_net_yearly"><strong>—</strong></td>
                                     </tr>
                                     <tr>
-                                        <td>Margem média</td>
+                                        <td>Margem média<span class="metric-description">Percentagem de lucro em relação
+                                                ao investimento</span></td>
                                         <td id="proj_margin_monthly">—</td>
                                         <td id="proj_margin_yearly">—</td>
                                     </tr>
@@ -1373,47 +1401,58 @@
                         <h3>📖 Glossário de Termos</h3>
                         <div class="glossary-item">
                             <span class="glossary-term">Preço Líquido:</span>
-                            <span class="glossary-definition">Preço do anúncio sem o IVA alemão (19%). É o custo base do veículo.</span>
+                            <span class="glossary-definition">Preço do anúncio sem o IVA alemão (19%). É o custo base do
+                                veículo.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">IVA Alemão Poupado:</span>
-                            <span class="glossary-definition">Valor de IVA que é abatido ao importar. Não se paga este imposto na importação.</span>
+                            <span class="glossary-definition">Valor de IVA que é abatido ao importar. Não se paga este
+                                imposto na importação.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Total Investido:</span>
-                            <span class="glossary-definition">Preço líquido + 600€ (matrículas/inspeções/papeladas) + 750€ (transporte de camião DE→PT).</span>
+                            <span class="glossary-definition">Preço líquido + 600€ (matrículas/inspeções/papeladas) +
+                                750€ (transporte de camião DE→PT).</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Venda Conservadora:</span>
-                            <span class="glossary-definition">Preço mínimo encontrado nas referências de mercado PT. Cenário pessimista.</span>
+                            <span class="glossary-definition">Preço mínimo encontrado nas referências de mercado PT.
+                                Cenário pessimista.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Venda Realista:</span>
-                            <span class="glossary-definition">Média dos preços das referências PT. Base para cálculo de rentabilidade.</span>
+                            <span class="glossary-definition">Média dos preços das referências PT. Base para cálculo de
+                                rentabilidade.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Lucro Bruto:</span>
-                            <span class="glossary-definition">Venda realista menos o total investido. Lucro por transação antes de qualquer dedução.</span>
+                            <span class="glossary-definition">Venda realista menos o total investido. Lucro por
+                                transação antes de qualquer dedução.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Margem:</span>
-                            <span class="glossary-definition">Percentagem de lucro bruto em relação ao investimento. Indica rentabilidade da operação.</span>
+                            <span class="glossary-definition">Percentagem de lucro bruto em relação ao investimento.
+                                Indica rentabilidade da operação.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Fee Empresa / Acordo:</span>
-                            <span class="glossary-definition">Percentagem aplicada sobre o lucro bruto de cada operação. Representa custos de parceria ou acordo comercial.</span>
+                            <span class="glossary-definition">Percentagem aplicada sobre o lucro bruto de cada operação.
+                                Representa custos de parceria ou acordo comercial.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Lucro Antes de IRC:</span>
-                            <span class="glossary-definition">Lucro bruto total menos o fee empresa. Base de cálculo para o IRC anual.</span>
+                            <span class="glossary-definition">Lucro bruto total menos o fee empresa. Base de cálculo
+                                para o IRC anual.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">IRC Estimado (Anual):</span>
-                            <span class="glossary-definition">Imposto sobre o Rendimento de Pessoas Coletivas calculado APENAS anualmente. Taxa: 17% (PME) se lucro ≤50.000€, ou 21% se >50.000€.</span>
+                            <span class="glossary-definition">Imposto sobre o Rendimento de Pessoas Coletivas calculado
+                                APENAS anualmente. Taxa: 17% (PME) se lucro ≤50.000€, ou 21% se >50.000€.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Lucro Líquido Final:</span>
-                            <span class="glossary-definition">Lucro após todas as deduções. No mensal não inclui IRC. No anual deduz IRC + Fee empresa.</span>
+                            <span class="glossary-definition">Lucro após todas as deduções. No mensal não inclui IRC. No
+                                anual deduz IRC + Fee empresa.</span>
                         </div>
                     </div>
                 </div>
@@ -1679,7 +1718,7 @@
             const monthlyFee = monthlyGrossProfit * (companyFeePct / 100);
             const monthlyBeforeIRC = monthlyGrossProfit - monthlyFee;
             const monthlyNetProfit = monthlyBeforeIRC; // Sem IRC no mensal
-            const monthlyMargin = (monthlyBeforeIRC / monthlyInvested) * 100;
+            const monthlyMargin = monthlyInvested > 0 ? (monthlyBeforeIRC / monthlyInvested) * 100 : 0;
 
             // Cálculos anuais
             const yearlyOps = monthlyOps * activeMonths;
@@ -1706,7 +1745,7 @@
             }
 
             const yearlyNetProfit = yearlyBeforeIRC - yearlyIRC;
-            const yearlyMargin = (yearlyBeforeIRC / yearlyInvested) * 100;
+            const yearlyMargin = yearlyInvested > 0 ? (yearlyBeforeIRC / yearlyInvested) * 100 : 0;
 
             // Atualizar UI
             document.getElementById('proj_fee_pct').textContent = companyFeePct;
