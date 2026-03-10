@@ -215,7 +215,8 @@
         input[type="text"],
         input[type="number"],
         input[type="url"],
-        input[type="month"] {
+        input[type="month"],
+        select {
             width: 100%;
             padding: 0.95rem 1.15rem;
             border-radius: 12px;
@@ -241,6 +242,47 @@
             border-color: var(--accent-strong);
             box-shadow: 0 0 0 4px var(--accent-soft);
             background: var(--surface);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select:hover {
+            border-color: rgba(37, 99, 235, 0.3);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--accent-strong);
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        .reference-item.hidden {
+            display: none;
+        }
+
+        .add-reference-btn {
+            width: 100%;
+            padding: 0.95rem;
+            border-radius: 12px;
+            border: 2px dashed var(--divider);
+            background: transparent;
+            color: var(--accent-strong);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 0.5rem;
+        }
+
+        .add-reference-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .add-reference-btn.hidden {
+            display: none;
         }
 
         .reference-item {
@@ -359,8 +401,8 @@
             }
 
             /* Esconder colunas de compra e venda */
-            .main-grid > .card:nth-child(1),
-            .main-grid > .card:nth-child(2) {
+            .main-grid>.card:nth-child(1),
+            .main-grid>.card:nth-child(2) {
                 display: none !important;
             }
 
@@ -511,6 +553,36 @@
                 font-size: 0.65rem;
                 color: #0066cc;
                 text-decoration: underline;
+            }
+
+            /* Glossário de termos */
+            .glossary {
+                margin-top: 2rem;
+                padding-top: 1rem;
+                border-top: 2px solid #000;
+                display: block !important;
+            }
+
+            .glossary h3 {
+                font-size: 0.9rem;
+                margin-bottom: 0.75rem;
+                font-weight: bold;
+            }
+
+            .glossary-item {
+                margin-bottom: 0.5rem;
+                font-size: 0.65rem;
+                line-height: 1.4;
+            }
+
+            .glossary-term {
+                font-weight: bold;
+                color: #000;
+            }
+
+            .glossary-definition {
+                color: #333;
+                margin-left: 0.5rem;
             }
         }
 
@@ -833,212 +905,297 @@
             <div class="hero-badges">
                 <span class="badge">IVA DE 19% abatido</span>
                 <span class="badge">Overhead fixo 600€</span>
+                <span class="badge">Transporte 750€</span>
                 <span class="badge">IRC 21% sobre lucro</span>
-                <span class="badge">Viagem padrão 2.300 km</span>
+                <span class="badge">Transporte: 5-15 dias</span>
             </div>
         </header>
 
         <form id="simulatorForm">
-        <div class="main-grid">
-            <!-- Coluna 1: Compra na Alemanha -->
-            <div class="card">
-                <div class="column-header">
-                    <div class="column-header-icon">🇩🇪</div>
-                    <div class="column-header-text">
-                        <h2>Compra</h2>
-                        <p>Dados do veículo na Alemanha</p>
+            <div class="main-grid">
+                <!-- Coluna 1: Compra na Alemanha -->
+                <div class="card">
+                    <div class="column-header">
+                        <div class="column-header-icon">🇩🇪</div>
+                        <div class="column-header-text">
+                            <h2>Compra</h2>
+                            <p>Dados do veículo na Alemanha</p>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="carName">Nome do Carro</label>
+                            <input type="text" id="carName" required placeholder="Ex: BMW i3 120 Ah">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adLink">Link do Anúncio</label>
+                            <input type="url" id="adLink" required placeholder="https://www.mobile.de/...">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="priceWithVAT">Preço do Anúncio (com IVA 19%)</label>
+                            <input type="number" id="priceWithVAT" required placeholder="25000" step="0.01" min="0">
+                            <p class="info-text">O preço líquido sem IVA será calculado automaticamente</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="currentKm">Quilómetros Atuais</label>
+                            <select id="currentKm" required>
+                                <option value="">Selecione...</option>
+                                <option value="5000">5.000 km</option>
+                                <option value="10000">10.000 km</option>
+                                <option value="15000">15.000 km</option>
+                                <option value="20000">20.000 km</option>
+                                <option value="25000">25.000 km</option>
+                                <option value="30000">30.000 km</option>
+                                <option value="35000">35.000 km</option>
+                                <option value="40000">40.000 km</option>
+                                <option value="45000">45.000 km</option>
+                                <option value="50000">50.000 km</option>
+                                <option value="55000">55.000 km</option>
+                                <option value="60000">60.000 km</option>
+                                <option value="65000">65.000 km</option>
+                                <option value="70000">70.000 km</option>
+                                <option value="75000">75.000 km</option>
+                                <option value="80000">80.000 km</option>
+                                <option value="85000">85.000 km</option>
+                                <option value="90000">90.000 km</option>
+                                <option value="95000">95.000 km</option>
+                                <option value="100000">100.000 km</option>
+                                <option value="110000">110.000 km</option>
+                                <option value="120000">120.000 km</option>
+                                <option value="130000">130.000 km</option>
+                                <option value="140000">140.000 km</option>
+                                <option value="150000">150.000 km</option>
+                                <option value="160000">160.000 km</option>
+                                <option value="170000">170.000 km</option>
+                                <option value="180000">180.000 km</option>
+                                <option value="190000">190.000 km</option>
+                                <option value="200000">200.000 km</option>
+                            </select>
+                            <p class="info-text">Transporte por camião 🚛 (5-15 dias)</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="firstRegistration">Mês/Ano da 1.ª Matrícula</label>
+                            <input type="month" id="firstRegistration" required>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-section">
-                    <div class="form-group">
-                        <label for="carName">Nome do Carro</label>
-                        <input type="text" id="carName" required placeholder="Ex: BMW i3 120 Ah">
+                <!-- Coluna 2: Venda em Portugal -->
+                <div class="card">
+                    <div class="column-header">
+                        <div class="column-header-icon">🇵🇹</div>
+                        <div class="column-header-text">
+                            <h2>Venda</h2>
+                            <p>Referências de mercado PT</p>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="adLink">Link do Anúncio</label>
-                        <input type="url" id="adLink" required placeholder="https://www.mobile.de/...">
+                    <div class="form-section">
+                        <!-- Referência 1 -->
+                        <div class="reference-item">
+                            <h4>Referência 1</h4>
+                            <div class="form-group">
+                                <label for="ref1Link">Link</label>
+                                <input type="url" id="ref1Link" required placeholder="https://www.standvirtual.com/...">
+                            </div>
+                            <div class="row-2cols">
+                                <div class="form-group">
+                                    <label for="ref1Price">Preço Pedido (€)</label>
+                                    <input type="number" id="ref1Price" required placeholder="30000" step="0.01"
+                                        min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ref1Km">Km</label>
+                                    <input type="number" id="ref1Km" required placeholder="50000" step="1" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Referência 2 -->
+                        <div class="reference-item hidden" id="ref2Container">
+                            <h4>Referência 2 (opcional)</h4>
+                            <div class="form-group">
+                                <label for="ref2Link">Link</label>
+                                <input type="url" id="ref2Link" placeholder="https://www.standvirtual.com/...">
+                            </div>
+                            <div class="row-2cols">
+                                <div class="form-group">
+                                    <label for="ref2Price">Preço Pedido (€)</label>
+                                    <input type="number" id="ref2Price" placeholder="32000" step="0.01" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ref2Km">Km</label>
+                                    <input type="number" id="ref2Km" placeholder="48000" step="1" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Referência 3 -->
+                        <div class="reference-item hidden" id="ref3Container">
+                            <h4>Referência 3 (opcional)</h4>
+                            <div class="form-group">
+                                <label for="ref3Link">Link</label>
+                                <input type="url" id="ref3Link" placeholder="https://www.standvirtual.com/...">
+                            </div>
+                            <div class="row-2cols">
+                                <div class="form-group">
+                                    <label for="ref3Price">Preço Pedido (€)</label>
+                                    <input type="number" id="ref3Price" placeholder="31000" step="0.01" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="ref3Km">Km</label>
+                                    <input type="number" id="ref3Km" placeholder="47000" step="1" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botão para adicionar referências -->
+                        <button type="button" class="add-reference-btn" id="addRefBtn" onclick="addReference()">
+                            + Adicionar Referência
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Coluna 3: Resultados -->
+                <div class="card results-container results-sticky" id="results">
+                    <div class="column-header">
+                        <div class="column-header-icon">📊</div>
+                        <div class="column-header-text">
+                            <h2>Resultado</h2>
+                            <p>Análise de rentabilidade</p>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="priceWithVAT">Preço do Anúncio (com IVA 19%)</label>
-                        <input type="number" id="priceWithVAT" required placeholder="25000" step="0.01" min="0">
-                        <p class="info-text">O preço líquido sem IVA será calculado automaticamente</p>
+                    <!-- Status Banner -->
+                    <div id="statusBanner" class="status-banner"></div>
+
+                    <!-- Informação do Carro -->
+                    <div class="car-info">
+                        <h3 id="resultCarName"></h3>
+                        <a id="resultCarLink" href="#" target="_blank"></a>
                     </div>
 
-                    <div class="form-group">
-                        <label for="currentKm">Quilómetros Atuais</label>
-                        <input type="number" id="currentKm" required placeholder="45000" step="1" min="0">
+                    <!-- Chips de Aviso -->
+                    <div class="chips-container" id="chipsContainer"></div>
+
+                    <!-- Resultados Financeiros -->
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <div class="result-label">Preço Líquido (sem IVA DE)</div>
+                            <div class="result-value" id="netPrice"></div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-label">IVA Alemão Poupado</div>
+                            <div class="result-value positive" id="vatSaved"></div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-label">Total Investido</div>
+                            <div class="result-value" id="totalInvested"></div>
+                            <p class="info-text">Preço líquido + 600€ overhead + 750€ transporte</p>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-label">Venda Conservadora (mín.)</div>
+                            <div class="result-value" id="conservativeSale"></div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-label">Venda Realista (média)</div>
+                            <div class="result-value" id="realisticSale"></div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-label">Lucro Bruto</div>
+                            <div class="result-value" id="grossProfit"></div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-label">IRC (21%)</div>
+                            <div class="result-value" id="irc"></div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-label">Lucro Líquido</div>
+                            <div class="result-value" id="netProfit"></div>
+                        </div>
+
+                        <div class="result-item">
+                            <div class="result-label">Margem</div>
+                            <div class="result-value" id="margin"></div>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="tripKm">Quilómetros da Viagem DE → PT</label>
-                        <input type="number" id="tripKm" required value="2300" step="1" min="0">
+                    <!-- Referências Usadas -->
+                    <div class="references-summary">
+                        <h3>Referências de Mercado PT</h3>
+                        <div id="referencesUsed"></div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="firstRegistration">Mês/Ano da 1.ª Matrícula</label>
-                        <input type="month" id="firstRegistration" required>
+                    <!-- Glossário (apenas no PDF) -->
+                    <div class="glossary" style="display: none;">
+                        <h3>📖 Glossário de Termos</h3>
+                        <div class="glossary-item">
+                            <span class="glossary-term">Preço Líquido:</span>
+                            <span class="glossary-definition">Preço do anúncio sem o IVA alemão (19%). É o custo base do
+                                veículo.</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">IVA Alemão Poupado:</span>
+                            <span class="glossary-definition">Valor de IVA que é abatido ao importar. Não se paga este
+                                imposto na importação.</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">Total Investido:</span>
+                            <span class="glossary-definition">Preço líquido + 600€ (matrículas/inspeções/papeladas) +
+                                750€ (transporte de camião DE→PT).</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">Venda Conservadora:</span>
+                            <span class="glossary-definition">Preço mínimo encontrado nas referências de mercado PT.
+                                Cenário pessimista.</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">Venda Realista:</span>
+                            <span class="glossary-definition">Média dos preços das referências PT. Base para cálculo de
+                                rentabilidade.</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">Lucro Bruto:</span>
+                            <span class="glossary-definition">Venda realista menos o total investido. Lucro antes de
+                                impostos.</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">IRC (21%):</span>
+                            <span class="glossary-definition">Imposto sobre o Rendimento de Pessoas Coletivas. Taxa fixa
+                                de 21% sobre o lucro bruto.</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">Lucro Líquido:</span>
+                            <span class="glossary-definition">Lucro final após pagar IRC. O que realmente fica no
+                                bolso.</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">Margem:</span>
+                            <span class="glossary-definition">Percentagem de lucro bruto em relação ao investimento.
+                                Indica rentabilidade do negócio.</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Coluna 2: Venda em Portugal -->
-            <div class="card">
-                <div class="column-header">
-                    <div class="column-header-icon">🇵🇹</div>
-                    <div class="column-header-text">
-                        <h2>Venda</h2>
-                        <p>Referências de mercado PT</p>
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <!-- Referência 1 -->
-                    <div class="reference-item">
-                        <h4>Referência 1</h4>
-                        <div class="form-group">
-                            <label for="ref1Link">Link</label>
-                            <input type="url" id="ref1Link" required placeholder="https://www.standvirtual.com/...">
-                        </div>
-                        <div class="row-2cols">
-                            <div class="form-group">
-                                <label for="ref1Price">Preço Pedido (€)</label>
-                                <input type="number" id="ref1Price" required placeholder="30000" step="0.01"
-                                    min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="ref1Km">Km</label>
-                                <input type="number" id="ref1Km" required placeholder="50000" step="1" min="0">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Referência 2 -->
-                    <div class="reference-item">
-                        <h4>Referência 2 (opcional)</h4>
-                        <div class="form-group">
-                            <label for="ref2Link">Link</label>
-                            <input type="url" id="ref2Link" placeholder="https://www.standvirtual.com/...">
-                        </div>
-                        <div class="row-2cols">
-                            <div class="form-group">
-                                <label for="ref2Price">Preço Pedido (€)</label>
-                                <input type="number" id="ref2Price" placeholder="32000" step="0.01" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="ref2Km">Km</label>
-                                <input type="number" id="ref2Km" placeholder="48000" step="1" min="0">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Referência 3 -->
-                    <div class="reference-item">
-                        <h4>Referência 3 (opcional)</h4>
-                        <div class="form-group">
-                            <label for="ref3Link">Link</label>
-                            <input type="url" id="ref3Link" placeholder="https://www.standvirtual.com/...">
-                        </div>
-                        <div class="row-2cols">
-                            <div class="form-group">
-                                <label for="ref3Price">Preço Pedido (€)</label>
-                                <input type="number" id="ref3Price" placeholder="31000" step="0.01" min="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="ref3Km">Km</label>
-                                <input type="number" id="ref3Km" placeholder="47000" step="1" min="0">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <!-- Botões Flutuantes -->
+            <div class="button-group">
+                <button type="submit" class="btn-primary">🧮 Simular</button>
+                <button type="button" id="pdfButton" class="btn-secondary" onclick="window.print()" disabled>📄
+                    PDF</button>
             </div>
-
-            <!-- Coluna 3: Resultados -->
-            <div class="card results-container results-sticky" id="results">
-                <div class="column-header">
-                    <div class="column-header-icon">📊</div>
-                    <div class="column-header-text">
-                        <h2>Resultado</h2>
-                        <p>Análise de rentabilidade</p>
-                    </div>
-                </div>
-
-                <!-- Status Banner -->
-                <div id="statusBanner" class="status-banner"></div>
-
-                <!-- Informação do Carro -->
-                <div class="car-info">
-                    <h3 id="resultCarName"></h3>
-                    <a id="resultCarLink" href="#" target="_blank"></a>
-                </div>
-
-                <!-- Chips de Aviso -->
-                <div class="chips-container" id="chipsContainer"></div>
-
-                <!-- Resultados Financeiros -->
-                <div class="result-grid">
-                    <div class="result-item">
-                        <div class="result-label">Preço Líquido (sem IVA DE)</div>
-                        <div class="result-value" id="netPrice"></div>
-                    </div>
-
-                    <div class="result-item">
-                        <div class="result-label">IVA Alemão Poupado</div>
-                        <div class="result-value positive" id="vatSaved"></div>
-                    </div>
-
-                    <div class="result-item">
-                        <div class="result-label">Total Investido</div>
-                        <div class="result-value" id="totalInvested"></div>
-                        <p class="info-text">Preço líquido + 600€ overhead</p>
-                    </div>
-
-                    <div class="result-item">
-                        <div class="result-label">Venda Conservadora (mín.)</div>
-                        <div class="result-value" id="conservativeSale"></div>
-                    </div>
-
-                    <div class="result-item">
-                        <div class="result-label">Venda Realista (média)</div>
-                        <div class="result-value" id="realisticSale"></div>
-                    </div>
-
-                    <div class="result-item">
-                        <div class="result-label">Lucro Bruto</div>
-                        <div class="result-value" id="grossProfit"></div>
-                    </div>
-
-                    <div class="result-item">
-                        <div class="result-label">IRC (21%)</div>
-                        <div class="result-value" id="irc"></div>
-                    </div>
-
-                    <div class="result-item">
-                        <div class="result-label">Lucro Líquido</div>
-                        <div class="result-value" id="netProfit"></div>
-                    </div>
-
-                    <div class="result-item">
-                        <div class="result-label">Margem</div>
-                        <div class="result-value" id="margin"></div>
-                    </div>
-                </div>
-
-                <!-- Referências Usadas -->
-                <div class="references-summary">
-                    <h3>Referências de Mercado PT</h3>
-                    <div id="referencesUsed"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Botões Flutuantes -->
-        <div class="button-group">
-            <button type="submit" class="btn-primary">🧮 Simular</button>
-            <button type="button" id="pdfButton" class="btn-secondary" onclick="window.print()" disabled>📄 PDF</button>
-        </div>
         </form>
     </div>
 
@@ -1046,6 +1203,7 @@
         const CONSTANTS = {
             VAT_DE: 0.19,
             OVERHEAD: 600,
+            TRANSPORT: 750,
             IRC_RATE: 0.21,
             MIN_KM_FOR_VAT_EXEMPTION: 6000,
             MIN_MONTHS_FOR_REGISTRATION: 6
@@ -1062,16 +1220,12 @@
             const adLink = document.getElementById('adLink').value;
             const priceWithVAT = parseFloat(document.getElementById('priceWithVAT').value);
             const currentKm = parseFloat(document.getElementById('currentKm').value);
-            const tripKm = parseFloat(document.getElementById('tripKm').value);
             const firstRegistration = document.getElementById('firstRegistration').value;
 
             // Calcular preço líquido (sem IVA alemão)
             const netPrice = priceWithVAT / (1 + CONSTANTS.VAT_DE);
             const vatSaved = priceWithVAT - netPrice;
-            const totalInvested = netPrice + CONSTANTS.OVERHEAD;
-
-            // Km totais após viagem
-            const totalKmAfterTrip = currentKm + tripKm;
+            const totalInvested = netPrice + CONSTANTS.OVERHEAD + CONSTANTS.TRANSPORT;
 
             // Verificar meses desde 1ª matrícula
             const registrationDate = new Date(firstRegistration + '-01');
@@ -1117,10 +1271,23 @@
                 irc,
                 netProfit,
                 margin,
-                totalKmAfterTrip,
+                currentKm,
                 monthsSinceRegistration,
                 references
             });
+        }
+
+        let visibleReferences = 1;
+
+        function addReference() {
+            if (visibleReferences < 3) {
+                visibleReferences++;
+                document.getElementById(`ref${visibleReferences}Container`).classList.remove('hidden');
+
+                if (visibleReferences === 3) {
+                    document.getElementById('addRefBtn').classList.add('hidden');
+                }
+            }
         }
 
         function displayResults(data) {
@@ -1175,23 +1342,23 @@
             const container = document.getElementById('chipsContainer');
             container.innerHTML = '';
 
-            // Chip IVA poupado
-            const vatChip = createChip(
-                `IVA Alemão Poupado: ${formatCurrency(data.vatSaved)}`,
+            // Chip transporte
+            const transportChip = createChip(
+                `🚛 Transporte de camião incluído (750€)`,
                 'success'
             );
-            container.appendChild(vatChip);
+            container.appendChild(transportChip);
 
             // Chip quilómetros
-            if (data.totalKmAfterTrip >= CONSTANTS.MIN_KM_FOR_VAT_EXEMPTION) {
+            if (data.currentKm >= CONSTANTS.MIN_KM_FOR_VAT_EXEMPTION) {
                 const kmChip = createChip(
-                    `✓ ${data.totalKmAfterTrip.toLocaleString('pt-PT')} km após viagem (IVA PT = 0€)`,
+                    `✓ ${data.currentKm.toLocaleString('pt-PT')} km (IVA PT = 0€)`,
                     'success'
                 );
                 container.appendChild(kmChip);
             } else {
                 const kmChip = createChip(
-                    `⚠ ${data.totalKmAfterTrip.toLocaleString('pt-PT')} km (risco IVA PT - mín. 6.000 km)`,
+                    `⚠ ${data.currentKm.toLocaleString('pt-PT')} km (risco IVA PT - mín. 6.000 km)`,
                     'danger'
                 );
                 container.appendChild(kmChip);
