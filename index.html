@@ -663,6 +663,11 @@
             color: var(--accent-strong);
         }
 
+        .projection-table thead th:nth-child(2),
+        .projection-table thead th:nth-child(3) {
+            text-align: center;
+        }
+
         .projection-table tbody tr {
             border-bottom: 1px solid var(--divider);
         }
@@ -691,9 +696,9 @@
         }
 
         .projection-table tbody td:not(:first-child) {
-            text-align: right;
-            font-weight: 500;
-            color: var(--text-secondary);
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
         .projection-highlight {
@@ -1612,13 +1617,13 @@
 
             if (data.grossProfit >= 4000 && data.margin >= 25) {
                 banner.className = 'status-banner status-success';
-                banner.textContent = `✓ EXCELENTE NEGÓCIO! Lucro: ${formatCurrency(data.netProfit)} | Margem: ${data.margin.toFixed(2)}%`;
+                banner.textContent = `✓ EXCELENTE NEGÓCIO! Lucro: ${formatCurrency(data.grossProfit)} | Margem: ${data.margin.toFixed(2)}%`;
             } else if (data.grossProfit > 0) {
                 banner.className = 'status-banner status-warning';
-                banner.textContent = `⚠ Negócio Viável - Lucro: ${formatCurrency(data.netProfit)} | Margem: ${data.margin.toFixed(2)}%`;
+                banner.textContent = `⚠ Negócio Viável - Lucro: ${formatCurrency(data.grossProfit)} | Margem: ${data.margin.toFixed(2)}%`;
             } else {
                 banner.className = 'status-banner status-danger';
-                banner.textContent = `✗ NÃO RENTÁVEL - Prejuízo: ${formatCurrency(data.netProfit)}`;
+                banner.textContent = `✗ NÃO RENTÁVEL - Prejuízo: ${formatCurrency(data.grossProfit)}`;
             }
         }
 
