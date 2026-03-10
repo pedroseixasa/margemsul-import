@@ -586,6 +586,166 @@
             }
         }
 
+        /* Projeção Anual */
+        .annual-projection {
+            margin-top: 2.5rem;
+            padding: 2rem;
+            border-radius: 20px;
+            background: var(--surface-alt);
+            border: 2px solid var(--divider);
+        }
+
+        .annual-projection h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .projection-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .projection-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .projection-input-group label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .projection-input-group input {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            border: 2px solid var(--divider);
+            background: var(--surface);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .projection-table-container {
+            overflow-x: auto;
+        }
+
+        .projection-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .projection-table thead {
+            background: var(--accent-soft);
+        }
+
+        .projection-table thead th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent-strong);
+        }
+
+        .projection-table tbody tr {
+            border-bottom: 1px solid var(--divider);
+        }
+
+        .projection-table tbody tr:hover {
+            background: var(--accent-soft);
+        }
+
+        .projection-table tbody td {
+            padding: 0.9rem 1rem;
+            font-size: 0.95rem;
+        }
+
+        .projection-table tbody td:first-child {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .projection-table tbody td:not(:first-child) {
+            text-align: right;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .projection-highlight {
+            background: rgba(37, 99, 235, 0.08) !important;
+        }
+
+        .projection-highlight td {
+            font-weight: 700 !important;
+            color: var(--text-primary) !important;
+        }
+
+        .irc-rate-label {
+            font-size: 0.75rem;
+            color: var(--accent-strong);
+            font-weight: 600;
+        }
+
+        @media print {
+            .annual-projection {
+                display: block !important;
+                page-break-before: always;
+                margin-top: 2rem;
+                padding: 1.5rem;
+                border: 2px solid #000;
+                background: white;
+            }
+
+            .annual-projection h3 {
+                font-size: 1.2rem;
+                color: #000;
+                border-bottom: 2px solid #000;
+                padding-bottom: 0.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .projection-inputs {
+                display: none !important;
+            }
+
+            .projection-table {
+                border: 2px solid #000;
+            }
+
+            .projection-table thead {
+                background: #f0f0f0 !important;
+            }
+
+            .projection-table thead th {
+                color: #000 !important;
+                border: 1px solid #000;
+            }
+
+            .projection-table tbody td {
+                color: #000 !important;
+                border: 1px solid #ddd;
+            }
+
+            .projection-highlight {
+                background: #e8e8e8 !important;
+            }
+
+            .projection-highlight td {
+                font-weight: 900 !important;
+            }
+        }
+
         /* Mobile: Botões normais no final do form */
         @media (max-width: 1023px) {
             .button-group {
@@ -1117,18 +1277,9 @@
                         </div>
 
                         <div class="result-item">
-                            <div class="result-label">IRC (21%)</div>
-                            <div class="result-value" id="irc"></div>
-                        </div>
-
-                        <div class="result-item">
-                            <div class="result-label">Lucro Líquido</div>
-                            <div class="result-value" id="netProfit"></div>
-                        </div>
-
-                        <div class="result-item">
                             <div class="result-label">Margem</div>
                             <div class="result-value" id="margin"></div>
+                            <p class="info-text">Baseada no lucro bruto</p>
                         </div>
                     </div>
 
@@ -1138,53 +1289,131 @@
                         <div id="referencesUsed"></div>
                     </div>
 
+                    <!-- Projeção Anual -->
+                    <div class="annual-projection" id="annualProjection" style="display: none;">
+                        <h3>📈 Projeção Anual de Negócio</h3>
+                        
+                        <div class="projection-inputs">
+                            <div class="projection-input-group">
+                                <label for="opsPerMonth">Nº de operações/mês</label>
+                                <input type="number" id="opsPerMonth" value="2" min="1" max="50" onchange="updateProjection()">
+                            </div>
+                            <div class="projection-input-group">
+                                <label for="activeMonths">Meses de atividade</label>
+                                <input type="number" id="activeMonths" value="12" min="1" max="12" onchange="updateProjection()">
+                            </div>
+                            <div class="projection-input-group">
+                                <label for="companyFee">Fee empresa / Acordo (%)</label>
+                                <input type="number" id="companyFee" value="0" min="0" max="100" step="0.5" onchange="updateProjection()">
+                            </div>
+                        </div>
+
+                        <div class="projection-table-container">
+                            <table class="projection-table">
+                                <thead>
+                                    <tr>
+                                        <th>Métrica</th>
+                                        <th>Mensal</th>
+                                        <th>Anual</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Nº de operações</td>
+                                        <td id="proj_ops_monthly">—</td>
+                                        <td id="proj_ops_yearly">—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Receita total de vendas</td>
+                                        <td id="proj_revenue_monthly">—</td>
+                                        <td id="proj_revenue_yearly">—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total investido</td>
+                                        <td id="proj_invested_monthly">—</td>
+                                        <td id="proj_invested_yearly">—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lucro bruto total</td>
+                                        <td id="proj_gross_monthly">—</td>
+                                        <td id="proj_gross_yearly">—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fee empresa (<span id="proj_fee_pct">0</span>%)</td>
+                                        <td id="proj_fee_monthly">—</td>
+                                        <td id="proj_fee_yearly">—</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lucro antes de IRC</td>
+                                        <td id="proj_before_irc_monthly">—</td>
+                                        <td id="proj_before_irc_yearly">—</td>
+                                    </tr>
+                                    <tr class="projection-highlight">
+                                        <td><strong>IRC estimado</strong> <span id="proj_irc_rate" class="irc-rate-label"></span></td>
+                                        <td>—</td>
+                                        <td id="proj_irc_yearly"><strong>—</strong></td>
+                                    </tr>
+                                    <tr class="projection-highlight">
+                                        <td><strong>Lucro líquido final</strong></td>
+                                        <td id="proj_net_monthly"><strong>—</strong></td>
+                                        <td id="proj_net_yearly"><strong>—</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Margem média</td>
+                                        <td id="proj_margin_monthly">—</td>
+                                        <td id="proj_margin_yearly">—</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <!-- Glossário (apenas no PDF) -->
                     <div class="glossary" style="display: none;">
                         <h3>📖 Glossário de Termos</h3>
                         <div class="glossary-item">
                             <span class="glossary-term">Preço Líquido:</span>
-                            <span class="glossary-definition">Preço do anúncio sem o IVA alemão (19%). É o custo base do
-                                veículo.</span>
+                            <span class="glossary-definition">Preço do anúncio sem o IVA alemão (19%). É o custo base do veículo.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">IVA Alemão Poupado:</span>
-                            <span class="glossary-definition">Valor de IVA que é abatido ao importar. Não se paga este
-                                imposto na importação.</span>
+                            <span class="glossary-definition">Valor de IVA que é abatido ao importar. Não se paga este imposto na importação.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Total Investido:</span>
-                            <span class="glossary-definition">Preço líquido + 600€ (matrículas/inspeções/papeladas) +
-                                750€ (transporte de camião DE→PT).</span>
+                            <span class="glossary-definition">Preço líquido + 600€ (matrículas/inspeções/papeladas) + 750€ (transporte de camião DE→PT).</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Venda Conservadora:</span>
-                            <span class="glossary-definition">Preço mínimo encontrado nas referências de mercado PT.
-                                Cenário pessimista.</span>
+                            <span class="glossary-definition">Preço mínimo encontrado nas referências de mercado PT. Cenário pessimista.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Venda Realista:</span>
-                            <span class="glossary-definition">Média dos preços das referências PT. Base para cálculo de
-                                rentabilidade.</span>
+                            <span class="glossary-definition">Média dos preços das referências PT. Base para cálculo de rentabilidade.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Lucro Bruto:</span>
-                            <span class="glossary-definition">Venda realista menos o total investido. Lucro antes de
-                                impostos.</span>
-                        </div>
-                        <div class="glossary-item">
-                            <span class="glossary-term">IRC (21%):</span>
-                            <span class="glossary-definition">Imposto sobre o Rendimento de Pessoas Coletivas. Taxa fixa
-                                de 21% sobre o lucro bruto.</span>
-                        </div>
-                        <div class="glossary-item">
-                            <span class="glossary-term">Lucro Líquido:</span>
-                            <span class="glossary-definition">Lucro final após pagar IRC. O que realmente fica no
-                                bolso.</span>
+                            <span class="glossary-definition">Venda realista menos o total investido. Lucro por transação antes de qualquer dedução.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Margem:</span>
-                            <span class="glossary-definition">Percentagem de lucro bruto em relação ao investimento.
-                                Indica rentabilidade do negócio.</span>
+                            <span class="glossary-definition">Percentagem de lucro bruto em relação ao investimento. Indica rentabilidade da operação.</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">Fee Empresa / Acordo:</span>
+                            <span class="glossary-definition">Percentagem aplicada sobre o lucro bruto de cada operação. Representa custos de parceria ou acordo comercial.</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">Lucro Antes de IRC:</span>
+                            <span class="glossary-definition">Lucro bruto total menos o fee empresa. Base de cálculo para o IRC anual.</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">IRC Estimado (Anual):</span>
+                            <span class="glossary-definition">Imposto sobre o Rendimento de Pessoas Coletivas calculado APENAS anualmente. Taxa: 17% (PME) se lucro ≤50.000€, ou 21% se >50.000€.</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">Lucro Líquido Final:</span>
+                            <span class="glossary-definition">Lucro após todas as deduções. No mensal não inclui IRC. No anual deduz IRC + Fee empresa.</span>
                         </div>
                     </div>
                 </div>
@@ -1252,10 +1481,8 @@
             const conservativeSale = Math.min(...prices);
             const realisticSale = prices.reduce((a, b) => a + b, 0) / prices.length;
 
-            // Lucros
+            // Lucros (sem IRC - será calculado anualmente)
             const grossProfit = realisticSale - totalInvested;
-            const irc = grossProfit > 0 ? grossProfit * CONSTANTS.IRC_RATE : 0;
-            const netProfit = grossProfit - irc;
             const margin = (grossProfit / totalInvested) * 100;
 
             // Mostrar resultados
@@ -1268,13 +1495,14 @@
                 conservativeSale,
                 realisticSale,
                 grossProfit,
-                irc,
-                netProfit,
                 margin,
                 currentKm,
                 monthsSinceRegistration,
                 references
             });
+
+            // Atualizar projeção anual
+            updateProjection();
         }
 
         let visibleReferences = 1;
@@ -1291,6 +1519,9 @@
         }
 
         function displayResults(data) {
+            // Armazenar dados para projeção anual
+            currentSimulationData = data;
+
             // Mostrar container de resultados
             document.getElementById('results').classList.add('active');
 
@@ -1313,15 +1544,12 @@
             grossProfitEl.textContent = formatCurrency(data.grossProfit);
             grossProfitEl.className = 'result-value ' + (data.grossProfit >= 0 ? 'positive' : 'negative');
 
-            document.getElementById('irc').textContent = formatCurrency(data.irc);
-
-            const netProfitEl = document.getElementById('netProfit');
-            netProfitEl.textContent = formatCurrency(data.netProfit);
-            netProfitEl.className = 'result-value ' + (data.netProfit >= 0 ? 'positive' : 'negative');
-
             const marginEl = document.getElementById('margin');
             marginEl.textContent = data.margin.toFixed(2) + '%';
             marginEl.className = 'result-value ' + (data.margin >= 0 ? 'positive' : 'negative');
+
+            // Mostrar projeção anual
+            document.getElementById('annualProjection').style.display = 'block';
 
             // Chips de aviso
             displayChips(data);
@@ -1431,6 +1659,79 @@
             const months = (date2.getFullYear() - date1.getFullYear()) * 12 +
                 (date2.getMonth() - date1.getMonth());
             return Math.max(0, months);
+        }
+
+        // Variável global para armazenar dados da simulação atual
+        let currentSimulationData = null;
+
+        function updateProjection() {
+            if (!currentSimulationData) return;
+
+            const opsPerMonth = parseFloat(document.getElementById('opsPerMonth').value) || 2;
+            const activeMonths = parseFloat(document.getElementById('activeMonths').value) || 12;
+            const companyFeePct = parseFloat(document.getElementById('companyFee').value) || 0;
+
+            // Cálculos mensais
+            const monthlyOps = opsPerMonth;
+            const monthlyRevenue = currentSimulationData.realisticSale * monthlyOps;
+            const monthlyInvested = currentSimulationData.totalInvested * monthlyOps;
+            const monthlyGrossProfit = currentSimulationData.grossProfit * monthlyOps;
+            const monthlyFee = monthlyGrossProfit * (companyFeePct / 100);
+            const monthlyBeforeIRC = monthlyGrossProfit - monthlyFee;
+            const monthlyNetProfit = monthlyBeforeIRC; // Sem IRC no mensal
+            const monthlyMargin = (monthlyBeforeIRC / monthlyInvested) * 100;
+
+            // Cálculos anuais
+            const yearlyOps = monthlyOps * activeMonths;
+            const yearlyRevenue = monthlyRevenue * activeMonths;
+            const yearlyInvested = monthlyInvested * activeMonths;
+            const yearlyGrossProfit = monthlyGrossProfit * activeMonths;
+            const yearlyFee = monthlyFee * activeMonths;
+            const yearlyBeforeIRC = yearlyGrossProfit - yearlyFee;
+
+            // IRC só no anual
+            let ircRate = 0;
+            let ircLabel = '';
+            let yearlyIRC = 0;
+
+            if (yearlyBeforeIRC > 0) {
+                if (yearlyBeforeIRC <= 50000) {
+                    ircRate = 0.17;
+                    ircLabel = '(taxa: 17% PME)';
+                } else {
+                    ircRate = 0.21;
+                    ircLabel = '(taxa: 21%)';
+                }
+                yearlyIRC = yearlyBeforeIRC * ircRate;
+            }
+
+            const yearlyNetProfit = yearlyBeforeIRC - yearlyIRC;
+            const yearlyMargin = (yearlyBeforeIRC / yearlyInvested) * 100;
+
+            // Atualizar UI
+            document.getElementById('proj_fee_pct').textContent = companyFeePct;
+            document.getElementById('proj_irc_rate').textContent = ircLabel;
+
+            // Mensal
+            document.getElementById('proj_ops_monthly').textContent = monthlyOps.toFixed(0);
+            document.getElementById('proj_revenue_monthly').textContent = formatCurrency(monthlyRevenue);
+            document.getElementById('proj_invested_monthly').textContent = formatCurrency(monthlyInvested);
+            document.getElementById('proj_gross_monthly').textContent = formatCurrency(monthlyGrossProfit);
+            document.getElementById('proj_fee_monthly').textContent = formatCurrency(monthlyFee);
+            document.getElementById('proj_before_irc_monthly').textContent = formatCurrency(monthlyBeforeIRC);
+            document.getElementById('proj_net_monthly').innerHTML = '<strong>' + formatCurrency(monthlyNetProfit) + '</strong>';
+            document.getElementById('proj_margin_monthly').textContent = monthlyMargin.toFixed(1) + '%';
+
+            // Anual
+            document.getElementById('proj_ops_yearly').textContent = yearlyOps.toFixed(0);
+            document.getElementById('proj_revenue_yearly').textContent = formatCurrency(yearlyRevenue);
+            document.getElementById('proj_invested_yearly').textContent = formatCurrency(yearlyInvested);
+            document.getElementById('proj_gross_yearly').textContent = formatCurrency(yearlyGrossProfit);
+            document.getElementById('proj_fee_yearly').textContent = formatCurrency(yearlyFee);
+            document.getElementById('proj_before_irc_yearly').textContent = formatCurrency(yearlyBeforeIRC);
+            document.getElementById('proj_irc_yearly').innerHTML = '<strong>' + formatCurrency(yearlyIRC) + '</strong>';
+            document.getElementById('proj_net_yearly').innerHTML = '<strong>' + formatCurrency(yearlyNetProfit) + '</strong>';
+            document.getElementById('proj_margin_yearly').textContent = yearlyMargin.toFixed(1) + '%';
         }
 
         // Auto-scroll em mobile após submit
