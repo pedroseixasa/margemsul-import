@@ -962,32 +962,7 @@
             opacity: 0.8;
         }
 
-        @media (min-width: 1024px) {
-            .results-sticky {
-                position: sticky;
-                top: 2rem;
-                max-height: calc(100vh - 4rem);
-                overflow-y: auto;
-            }
-
-            .results-sticky::-webkit-scrollbar {
-                width: 8px;
-            }
-
-            .results-sticky::-webkit-scrollbar-track {
-                background: var(--surface-alt);
-                border-radius: 8px;
-            }
-
-            .results-sticky::-webkit-scrollbar-thumb {
-                background: var(--divider);
-                border-radius: 8px;
-            }
-
-            .results-sticky::-webkit-scrollbar-thumb:hover {
-                background: var(--text-secondary);
-            }
-        }
+        /* Removido scroll da div para usar scroll normal da página */
 
         .references-summary {
             margin-top: 2rem;
@@ -1318,11 +1293,6 @@
                                 <input type="number" id="activeMonths" value="12" min="1" max="12"
                                     onchange="updateProjection()">
                             </div>
-                            <div class="projection-input-group">
-                                <label for="companyFee">Fee empresa / Acordo (%)</label>
-                                <input type="number" id="companyFee" value="0" min="0" max="100" step="0.5"
-                                    onchange="updateProjection()">
-                            </div>
                         </div>
 
                         <div class="projection-table-container">
@@ -1355,22 +1325,9 @@
                                     </tr>
                                     <tr>
                                         <td>Lucro bruto total<span class="metric-description">Receita menos investimento
-                                                (antes de deduções)</span></td>
+                                                (antes de IRC)</span></td>
                                         <td id="proj_gross_monthly">—</td>
                                         <td id="proj_gross_yearly">—</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Fee empresa / Acordo (<span id="proj_fee_pct">0</span>%)<span
-                                                class="metric-description">Percentagem aplicada sobre o lucro
-                                                bruto</span></td>
-                                        <td id="proj_fee_monthly">—</td>
-                                        <td id="proj_fee_yearly">—</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Lucro antes de IRC<span class="metric-description">Lucro bruto menos fee
-                                                empresa</span></td>
-                                        <td id="proj_before_irc_monthly">—</td>
-                                        <td id="proj_before_irc_yearly">—</td>
                                     </tr>
                                     <tr class="projection-highlight">
                                         <td><strong>IRC estimado</strong> <span id="proj_irc_rate"
@@ -1390,6 +1347,14 @@
                                                 ao investimento</span></td>
                                         <td id="proj_margin_monthly">—</td>
                                         <td id="proj_margin_yearly">—</td>
+                                    </tr>
+                                    <tr class="projection-highlight"
+                                        style="background: rgba(16, 185, 129, 0.12) !important;">
+                                        <td><strong>💰 Lucro por pessoa (4 sócios)</strong><span
+                                                class="metric-description">Divisão igual do lucro líquido final entre 4
+                                                pessoas</span></td>
+                                        <td id="proj_per_person_monthly"><strong>—</strong></td>
+                                        <td id="proj_per_person_yearly"><strong>—</strong></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1435,24 +1400,19 @@
                                 Indica rentabilidade da operação.</span>
                         </div>
                         <div class="glossary-item">
-                            <span class="glossary-term">Fee Empresa / Acordo:</span>
-                            <span class="glossary-definition">Percentagem aplicada sobre o lucro bruto de cada operação.
-                                Representa custos de parceria ou acordo comercial.</span>
-                        </div>
-                        <div class="glossary-item">
-                            <span class="glossary-term">Lucro Antes de IRC:</span>
-                            <span class="glossary-definition">Lucro bruto total menos o fee empresa. Base de cálculo
-                                para o IRC anual.</span>
-                        </div>
-                        <div class="glossary-item">
                             <span class="glossary-term">IRC Estimado (Anual):</span>
                             <span class="glossary-definition">Imposto sobre o Rendimento de Pessoas Coletivas calculado
                                 APENAS anualmente. Taxa: 17% (PME) se lucro ≤50.000€, ou 21% se >50.000€.</span>
                         </div>
                         <div class="glossary-item">
                             <span class="glossary-term">Lucro Líquido Final:</span>
-                            <span class="glossary-definition">Lucro após todas as deduções. No mensal não inclui IRC. No
-                                anual deduz IRC + Fee empresa.</span>
+                            <span class="glossary-definition">Lucro bruto menos IRC anual. O que realmente fica após
+                                impostos da empresa.</span>
+                        </div>
+                        <div class="glossary-item">
+                            <span class="glossary-term">Lucro por Pessoa:</span>
+                            <span class="glossary-definition">Divisão igual do lucro líquido final entre 4 sócios.
+                                Representa o ganho individual de cada pessoa.</span>
                         </div>
                     </div>
                 </div>
@@ -1708,47 +1668,51 @@
 
             const opsPerMonth = parseFloat(document.getElementById('opsPerMonth').value) || 2;
             const activeMonths = parseFloat(document.getElementById('activeMonths').value) || 12;
-            const companyFeePct = parseFloat(document.getElementById('companyFee').value) || 0;
+
+            // Validação para evitar NaN
+            if (!currentSimulationData.realisticSale || !currentSimulationData.totalInvested || !currentSimulationData.grossProfit) {
+                console.error('Dados inválidos para cálculo de projeção');
+                return;
+            }
 
             // Cálculos mensais
             const monthlyOps = opsPerMonth;
             const monthlyRevenue = currentSimulationData.realisticSale * monthlyOps;
             const monthlyInvested = currentSimulationData.totalInvested * monthlyOps;
             const monthlyGrossProfit = currentSimulationData.grossProfit * monthlyOps;
-            const monthlyFee = monthlyGrossProfit * (companyFeePct / 100);
-            const monthlyBeforeIRC = monthlyGrossProfit - monthlyFee;
-            const monthlyNetProfit = monthlyBeforeIRC; // Sem IRC no mensal
-            const monthlyMargin = monthlyInvested > 0 ? (monthlyBeforeIRC / monthlyInvested) * 100 : 0;
+            const monthlyNetProfit = monthlyGrossProfit; // Sem IRC no mensal
+            const monthlyMargin = monthlyInvested > 0 ? (monthlyGrossProfit / monthlyInvested) * 100 : 0;
 
             // Cálculos anuais
             const yearlyOps = monthlyOps * activeMonths;
             const yearlyRevenue = monthlyRevenue * activeMonths;
             const yearlyInvested = monthlyInvested * activeMonths;
             const yearlyGrossProfit = monthlyGrossProfit * activeMonths;
-            const yearlyFee = monthlyFee * activeMonths;
-            const yearlyBeforeIRC = yearlyGrossProfit - yearlyFee;
 
             // IRC só no anual
             let ircRate = 0;
             let ircLabel = '';
             let yearlyIRC = 0;
 
-            if (yearlyBeforeIRC > 0) {
-                if (yearlyBeforeIRC <= 50000) {
+            if (yearlyGrossProfit > 0) {
+                if (yearlyGrossProfit <= 50000) {
                     ircRate = 0.17;
                     ircLabel = '(taxa: 17% PME)';
                 } else {
                     ircRate = 0.21;
                     ircLabel = '(taxa: 21%)';
                 }
-                yearlyIRC = yearlyBeforeIRC * ircRate;
+                yearlyIRC = yearlyGrossProfit * ircRate;
             }
 
-            const yearlyNetProfit = yearlyBeforeIRC - yearlyIRC;
-            const yearlyMargin = yearlyInvested > 0 ? (yearlyBeforeIRC / yearlyInvested) * 100 : 0;
+            const yearlyNetProfit = yearlyGrossProfit - yearlyIRC;
+            const yearlyMargin = yearlyInvested > 0 ? (yearlyGrossProfit / yearlyInvested) * 100 : 0;
+
+            // Lucro por pessoa (4 sócios)
+            const monthlyPerPerson = monthlyNetProfit / 4;
+            const yearlyPerPerson = yearlyNetProfit / 4;
 
             // Atualizar UI
-            document.getElementById('proj_fee_pct').textContent = companyFeePct;
             document.getElementById('proj_irc_rate').textContent = ircLabel;
 
             // Mensal
@@ -1756,21 +1720,19 @@
             document.getElementById('proj_revenue_monthly').textContent = formatCurrency(monthlyRevenue);
             document.getElementById('proj_invested_monthly').textContent = formatCurrency(monthlyInvested);
             document.getElementById('proj_gross_monthly').textContent = formatCurrency(monthlyGrossProfit);
-            document.getElementById('proj_fee_monthly').textContent = formatCurrency(monthlyFee);
-            document.getElementById('proj_before_irc_monthly').textContent = formatCurrency(monthlyBeforeIRC);
             document.getElementById('proj_net_monthly').innerHTML = '<strong>' + formatCurrency(monthlyNetProfit) + '</strong>';
             document.getElementById('proj_margin_monthly').textContent = monthlyMargin.toFixed(1) + '%';
+            document.getElementById('proj_per_person_monthly').innerHTML = '<strong>' + formatCurrency(monthlyPerPerson) + '</strong>';
 
             // Anual
             document.getElementById('proj_ops_yearly').textContent = yearlyOps.toFixed(0);
             document.getElementById('proj_revenue_yearly').textContent = formatCurrency(yearlyRevenue);
             document.getElementById('proj_invested_yearly').textContent = formatCurrency(yearlyInvested);
             document.getElementById('proj_gross_yearly').textContent = formatCurrency(yearlyGrossProfit);
-            document.getElementById('proj_fee_yearly').textContent = formatCurrency(yearlyFee);
-            document.getElementById('proj_before_irc_yearly').textContent = formatCurrency(yearlyBeforeIRC);
             document.getElementById('proj_irc_yearly').innerHTML = '<strong>' + formatCurrency(yearlyIRC) + '</strong>';
             document.getElementById('proj_net_yearly').innerHTML = '<strong>' + formatCurrency(yearlyNetProfit) + '</strong>';
             document.getElementById('proj_margin_yearly').textContent = yearlyMargin.toFixed(1) + '%';
+            document.getElementById('proj_per_person_yearly').innerHTML = '<strong>' + formatCurrency(yearlyPerPerson) + '</strong>';
         }
 
         // Auto-scroll em mobile após submit
