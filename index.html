@@ -439,39 +439,72 @@
 
             .results-sticky {
                 position: static;
+                display: flex;
+                flex-direction: column;
             }
 
-            /* Header compacto */
+            /* Esconder status banner no PDF */
             .status-banner {
-                border: 2px solid #000;
-                background: #f0f0f0 !important;
-                color: #000 !important;
-                border-radius: 4px;
-                font-size: 10pt;
-                font-weight: 900;
-                padding: 0.3cm;
-                margin-bottom: 0.3cm;
-                text-align: center;
+                display: none !important;
+            }
+
+            /* Reordenar elementos: car-info e referências para o final */
+            .chips-container {
+                order: 1;
+            }
+
+            .result-grid {
+                order: 2;
+            }
+
+            .annual-projection {
+                order: 3;
+            }
+
+            .glossary {
+                order: 4;
             }
 
             .car-info {
-                border: 1.5px solid #333;
+                order: 5;
+            }
+
+            .references-summary {
+                order: 6;
+            }
+
+            /* Car info no final */
+            .car-info {
+                border-top: 2px solid #000;
+                border-bottom: none;
+                border-left: none;
+                border-right: none;
                 background: white;
-                border-radius: 3px;
-                padding: 0.25cm;
-                margin-bottom: 0.3cm;
+                border-radius: 0;
+                padding: 0.25cm 0;
+                margin-top: 0.25cm;
+                margin-bottom: 0.15cm;
             }
 
             .car-info h3 {
-                font-size: 9.5pt;
+                font-size: 8.5pt;
                 font-weight: 900;
                 margin-bottom: 0.1cm;
                 color: #000;
             }
 
+            .car-info::before {
+                content: '🚗 Carro para Comprar';
+                display: block;
+                font-size: 8.5pt;
+                font-weight: 900;
+                color: #000;
+                margin-bottom: 0.15cm;
+            }
+
             .car-info a {
                 color: #0066cc;
-                font-size: 6.5pt;
+                font-size: 6pt;
                 word-break: break-all;
                 text-decoration: none;
             }
@@ -552,19 +585,21 @@
                 line-height: 1.2;
             }
 
-            /* Referências compactas */
+            /* Referências no final */
             .references-summary {
-                border-top: 2px solid #000;
-                padding-top: 0.25cm;
-                margin-top: 0.25cm;
-                margin-bottom: 0.25cm;
+                border-top: none;
+                border-bottom: 2px solid #000;
+                padding-top: 0;
+                padding-bottom: 0.25cm;
+                margin-top: 0;
+                margin-bottom: 0;
                 page-break-inside: avoid;
             }
 
             .references-summary h3 {
-                font-size: 9pt;
+                font-size: 8.5pt;
                 font-weight: 900;
-                margin-bottom: 0.2cm;
+                margin-bottom: 0.15cm;
                 color: #000;
             }
 
@@ -600,11 +635,14 @@
                 word-break: break-all;
             }
 
-            /* Glossário compacto em 2 colunas */
+            /* Glossário compacto */
             .glossary {
                 margin-top: 0.25cm;
+                margin-bottom: 0.25cm;
                 padding-top: 0.25cm;
+                padding-bottom: 0.25cm;
                 border-top: 2px solid #000;
+                border-bottom: none;
                 display: block !important;
                 page-break-inside: auto;
             }
