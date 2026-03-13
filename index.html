@@ -796,6 +796,40 @@
             font-weight: 600;
         }
 
+        .irc-monthly-note {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .projection-net-final {
+            background: rgba(16, 185, 129, 0.15) !important;
+            border-top: 2px solid var(--success) !important;
+        }
+
+        .projection-net-final td {
+            font-weight: 700 !important;
+            color: var(--success) !important;
+            font-size: 1.05rem !important;
+        }
+
+        .projection-capital {
+            background: rgba(245, 158, 11, 0.08) !important;
+        }
+
+        .projection-capital td {
+            color: var(--text-primary);
+        }
+
+        .projection-capital.capital-warning {
+            background: rgba(245, 158, 11, 0.18) !important;
+        }
+
+        .projection-capital.capital-warning td {
+            color: var(--warning) !important;
+            font-weight: 700 !important;
+        }
+
         @media print {
             .annual-projection {
                 display: block !important;
@@ -882,6 +916,16 @@
             .projection-highlight td {
                 font-weight: 900 !important;
                 font-size: 8pt !important;
+            }
+
+            .projection-net-final td {
+                font-weight: 900 !important;
+                font-size: 8.5pt !important;
+                border-top: 2px solid #000 !important;
+            }
+
+            .projection-capital.capital-warning td {
+                font-weight: 900 !important;
             }
 
             .irc-rate-label {
@@ -1466,8 +1510,8 @@
                                         <td id="proj_invested_yearly">—</td>
                                     </tr>
                                     <tr>
-                                        <td>Lucro bruto total<span class="metric-description">Receita menos investimento
-                                                (antes de IRC)</span></td>
+                                        <td>Lucro bruto total<span class="metric-description">Receita menos
+                                                investimento, antes de IRC</span></td>
                                         <td id="proj_gross_monthly">—</td>
                                         <td id="proj_gross_yearly">—</td>
                                     </tr>
@@ -1475,28 +1519,51 @@
                                         <td><strong>IRC estimado</strong> <span id="proj_irc_rate"
                                                 class="irc-rate-label"></span><span class="metric-description">Imposto
                                                 sobre Pessoas Coletivas, calculado APENAS anualmente</span></td>
-                                        <td>—</td>
+                                        <td><span class="irc-monthly-note">— <em>ver anual</em></span></td>
                                         <td id="proj_irc_yearly"><strong>—</strong></td>
                                     </tr>
                                     <tr class="projection-highlight">
-                                        <td><strong>Lucro líquido final</strong><span class="metric-description">O que
-                                                realmente fica após todas as deduções</span></td>
-                                        <td id="proj_net_monthly"><strong>—</strong></td>
+                                        <td><strong>Lucro líquido (após IRC)</strong><span
+                                                class="metric-description">Lucro bruto menos IRC. Mensal sem IRC pois é
+                                                imposto anual.</span></td>
+                                        <td><span class="irc-monthly-note">— <em>ver anual</em></span><span
+                                                class="metric-description">O IRC é calculado anualmente — ver coluna
+                                                anual</span></td>
                                         <td id="proj_net_yearly"><strong>—</strong></td>
                                     </tr>
                                     <tr>
-                                        <td>Margem média<span class="metric-description">Percentagem de lucro em relação
-                                                ao investimento</span></td>
+                                        <td>Margem média<span class="metric-description">Percentagem de lucro bruto em
+                                                relação ao investimento</span></td>
                                         <td id="proj_margin_monthly">—</td>
                                         <td id="proj_margin_yearly">—</td>
                                     </tr>
                                     <tr class="projection-highlight"
                                         style="background: rgba(16, 185, 129, 0.12) !important;">
                                         <td><strong>💰 Lucro por pessoa (4 sócios)</strong><span
-                                                class="metric-description">Divisão igual do lucro líquido final entre 4
-                                                pessoas</span></td>
+                                                class="metric-description">Divisão igual do lucro líquido (após IRC)
+                                                entre 4 sócios</span></td>
                                         <td id="proj_per_person_monthly"><strong>—</strong></td>
                                         <td id="proj_per_person_yearly"><strong>—</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>IRS sobre dividendos (28%)<span class="metric-description">Taxa liberatória
+                                                sobre distribuição de dividendos a sócios em Portugal</span></td>
+                                        <td id="proj_irs_monthly">—</td>
+                                        <td id="proj_irs_yearly">—</td>
+                                    </tr>
+                                    <tr class="projection-net-final">
+                                        <td><strong>💵 Lucro real por sócio (após IRS)</strong><span
+                                                class="metric-description">O que cada sócio recebe na mão, após IRC +
+                                                IRS dividendos</span></td>
+                                        <td id="proj_net_final_monthly"><strong>—</strong></td>
+                                        <td id="proj_net_final_yearly"><strong>—</strong></td>
+                                    </tr>
+                                    <tr class="projection-capital" id="proj_capital_row">
+                                        <td><strong id="proj_capital_label">Capital necessário por ciclo</strong><span
+                                                class="metric-description">Capital mínimo para sustentar operações
+                                                mensais antes de receber das vendas</span></td>
+                                        <td id="proj_capital_monthly"><strong>—</strong></td>
+                                        <td>—</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1850,9 +1917,22 @@
             const yearlyNetProfit = yearlyGrossProfit - yearlyIRC;
             const yearlyMargin = yearlyInvested > 0 ? (yearlyGrossProfit / yearlyInvested) * 100 : 0;
 
-            // Lucro por pessoa (4 sócios)
-            const monthlyPerPerson = monthlyNetProfit / 4;
+            // Lucro por pessoa (4 sócios) — baseado no lucro após IRC
+            const monthlyPerPerson = monthlyGrossProfit / 4; // mensal: sem IRC (anual)
             const yearlyPerPerson = yearlyNetProfit / 4;
+
+            // IRS sobre dividendos (28%)
+            const IRS_RATE = 0.28;
+            const monthlyIRS = monthlyPerPerson * IRS_RATE;
+            const yearlyIRS = yearlyPerPerson * IRS_RATE;
+
+            // Lucro real por sócio após IRS
+            const monthlyNetFinal = monthlyPerPerson - monthlyIRS;
+            const yearlyNetFinal = yearlyPerPerson - yearlyIRS;
+
+            // Capital necessário por ciclo
+            const capitalNeeded = currentSimulationData.totalInvested * opsPerMonth;
+            const capitalWarning = capitalNeeded > 50000;
 
             // Atualizar UI
             document.getElementById('proj_irc_rate').textContent = ircLabel;
@@ -1862,9 +1942,22 @@
             document.getElementById('proj_revenue_monthly').textContent = formatCurrency(monthlyRevenue);
             document.getElementById('proj_invested_monthly').textContent = formatCurrency(monthlyInvested);
             document.getElementById('proj_gross_monthly').textContent = formatCurrency(monthlyGrossProfit);
-            document.getElementById('proj_net_monthly').innerHTML = '<strong>' + formatCurrency(monthlyNetProfit) + '</strong>';
             document.getElementById('proj_margin_monthly').textContent = monthlyMargin.toFixed(1) + '%';
             document.getElementById('proj_per_person_monthly').innerHTML = '<strong>' + formatCurrency(monthlyPerPerson) + '</strong>';
+            document.getElementById('proj_irs_monthly').textContent = formatCurrency(monthlyIRS);
+            document.getElementById('proj_net_final_monthly').innerHTML = '<strong>' + formatCurrency(monthlyNetFinal) + '</strong>';
+
+            // Capital necessário
+            const capitalRow = document.getElementById('proj_capital_row');
+            const capitalLabel = document.getElementById('proj_capital_label');
+            document.getElementById('proj_capital_monthly').innerHTML = '<strong>' + (capitalWarning ? '⚠️ ' : '') + formatCurrency(capitalNeeded) + '</strong>';
+            if (capitalWarning) {
+                capitalRow.classList.add('capital-warning');
+                capitalLabel.textContent = '⚠️ Capital necessário por ciclo';
+            } else {
+                capitalRow.classList.remove('capital-warning');
+                capitalLabel.textContent = 'Capital necessário por ciclo';
+            }
 
             // Anual
             document.getElementById('proj_ops_yearly').textContent = yearlyOps.toFixed(0);
@@ -1875,6 +1968,8 @@
             document.getElementById('proj_net_yearly').innerHTML = '<strong>' + formatCurrency(yearlyNetProfit) + '</strong>';
             document.getElementById('proj_margin_yearly').textContent = yearlyMargin.toFixed(1) + '%';
             document.getElementById('proj_per_person_yearly').innerHTML = '<strong>' + formatCurrency(yearlyPerPerson) + '</strong>';
+            document.getElementById('proj_irs_yearly').textContent = formatCurrency(yearlyIRS);
+            document.getElementById('proj_net_final_yearly').innerHTML = '<strong>' + formatCurrency(yearlyNetFinal) + '</strong>';
         }
 
         // Auto-scroll em mobile após submit
